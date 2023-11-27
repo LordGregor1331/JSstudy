@@ -57,4 +57,4 @@ let apartsperentrance = totalfloors * apartsperfloor;
 let entrance = Math.ceil(apartsnumber / apartsperentrance);
 apartsperentrance++
 let floor = Math.ceil((apartsnumber % apartsperentrance) / apartsperfloor);
-alert("Квартира #" + apartsnumber + " находится в подъезде" + entrance + " на этаже " + floor + ".");
+alert("Квартира #" + apartsnumber + " находится в  " + entrance + " на этаже " + floor + ".");
