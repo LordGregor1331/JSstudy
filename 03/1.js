@@ -28,6 +28,17 @@ activefathername = fathername.charAt(0).toUpperCase() + fathername.slice(1).toLo
 fullname = activename + " " + activesurname + " " + activefathername
 console.log(fullname)
 
+//str beer
+let str = "Було жарко. Василь пив пиво вприкуску з креветками";
+let words = str.split(' ');
+for (let i = 0; i < words.length; i++) {
+    if (words[i] === 'пиво') {
+        words[i] = 'чай';
+    }
+}
+let newStr = words.join(' ');
+console.log(newStr);
+
 //str no tag
 let str = "якийсь текст, в якому є один тег <br /> і всяке інше"
 let start = str.indexOf("<");
