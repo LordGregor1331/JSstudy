@@ -50,13 +50,12 @@ let multilinestr = str.split("\\n").join("\n");
 console.log(multilinestr)
 
 //youtube 
-const link = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-let userinput = prompt("Link the youtube video");
-let match = userinput.match(link);
-let html = ''; 
-if (match && match[1]) {
-    let videoid = match[1];
-    let html = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoid}" frameborder="0" allowfullscreen></iframe>`
+function youtube() {
+    const link = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const userinput = prompt("Link the youtube video");
+    const ytid = userinput.match(link);
+    console.log(ytid)
 }
-document.write(html)
+document.write(`<iframe width="560" height="315" src="https://www.youtube.com/embed/${ytid}" frameborder="0" allowfullscreen></iframe>`)
+youtube()
 //вроде как работает, но выдает пустую страницу. Хочу уточнить на следующем уроке
