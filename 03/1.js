@@ -28,6 +28,17 @@ activefathername = fathername.charAt(0).toUpperCase() + fathername.slice(1).toLo
 fullname = activename + " " + activesurname + " " + activefathername
 console.log(fullname)
 
+//str beer
+let str = "Було жарко. Василь пив пиво вприкуску з креветками";
+let words = str.split(' ');
+for (let i = 0; i < words.length; i++) {
+    if (words[i] === 'пиво') {
+        words[i] = 'чай';
+    }
+}
+let newStr = words.join(' ');
+console.log(newStr);
+
 //str no tag
 let str = "якийсь текст, в якому є один тег <br /> і всяке інше"
 let start = str.indexOf("<");
@@ -51,11 +62,14 @@ console.log(multilinestr)
 
 //youtube 
 function youtube() {
-    const link = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const userinput = prompt("Link the youtube video");
+    const link = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const ytid = userinput.match(link);
     console.log(ytid)
+    document.write(`<iframe src="https://www.youtube.com/embed/${ytid[1]}"
+    width="560" height="315"
+    frameborder="0"
+    allowfullscreen>
+    </iframe>`)
 }
-document.write(`<iframe width="560" height="315" src="https://www.youtube.com/embed/${ytid}" frameborder="0" allowfullscreen></iframe>`)
 youtube()
-//вроде как работает, но выдает пустую страницу. Хочу уточнить на следующем уроке
