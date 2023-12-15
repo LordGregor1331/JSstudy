@@ -45,16 +45,12 @@ let result = '#' + //это для преобразователя
 alert("Отриманий колір у форматі #RRGGBB: " + result)
 
 //задание на подъезд
-let entrances = prompt("Введите количество подьездов в доме")
-let floors = prompt("Введите количество этажей в доме")
-let apartments = prompt ("Введите количество квартир на этаже")
-let apartmentnumber = prompt("Введите номер квартиры")
-let totalentrances = parseFloat(entrances)
-let totalfloors = parseFloat(floors)
-let apartsperfloor = parseFloat(apartments)
-let apartsnumber = parseFloat(apartmentnumber)
-let apartsperentrance = totalfloors * apartsperfloor;
-let entrance = Math.ceil(apartsnumber / apartsperentrance);
-apartsperentrance++
-let floor = Math.ceil((apartsnumber % apartsperentrance) / apartsperfloor);
-alert("Квартира #" + apartsnumber + " находится в  " + entrance + " на этаже " + floor + ".");
+let entrances = +prompt("Введите количество подьездов в доме")
+let floors = +prompt("Введите количество этажей в доме")
+let apartments = +prompt ("Введите количество квартир на этаже")
+let apartmentnumber = +prompt("Введите номер квартиры")
+let apartsperentrance = floors * apartments;
+entrances = Math.ceil(apartmentnumber / apartsperentrance);
+apartmentnumber = (apartmentnumber % apartsperentrance) || apartsperentrance;
+let floor = Math.ceil(apartmentnumber / apartments);
+alert("Квартира #" + apartmentnumber + " находится в  " + entrances + " подъезде на этаже " + floor++ + ".");
