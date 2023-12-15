@@ -44,14 +44,14 @@
 
 //Multiply table 
 const multiplytable = [];
-for (let i = 1; i <= 5; i++) {
+for (let i = 0; i <= 5; i++) {
     const row = [];
-    for (let j = 1; j <= 5; j++) {
+    for (let j = 0; j <= 5; j++) {
         row.push(i * j);
     }
     multiplytable.push(row);
 }
-console.log(multiplytable[2][3])//у меня выходит [2] [3] = 12, подскажите пожалуйста, что тут не так?
+console.log(multiplytable[2][3])
 
 //Index of Word
 {
