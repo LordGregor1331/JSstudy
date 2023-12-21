@@ -134,3 +134,22 @@ document.write(tableHTML)
     const filteredtext = filterlexics(inputstr, badlexics);
     console.log(filteredtext);
 }
+
+//Array of objects sort
+var persons = [
+    { name: "Іван", age: 17 },
+    { name: "Марія", age: 35 },
+    { name: "Олексій", age: 73 },
+    { name: "Яків", age: 12 },
+]
+function sort(arr, field, ascending = true) {
+    if (ascending) {
+        arr.sort((a, b) => {
+            if (a[field] > b[field]) return -1;
+            if (a[field] < b[field]) return 1;
+            return 0
+        })
+    }
+}
+sort(persons, "age");
+console.log ("sotring by age", persons)

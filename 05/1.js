@@ -127,9 +127,22 @@ console.log(multiplytable[2][3])
     arr2 === arr;
 }
 
+//Flat
+{
+    const multiplytable = [];
+    for (let i = 0; i <= 5; i++) {
+        const row = [];
+        for (let j = 0; j <= 5; j++) {
+            row.push(i * j);
+        }
+        multiplytable.push(row);
+    }
+    const flattenedarr = [].concat(...multiplytable)
+    console.log(flattenedarr)
+}
 //destruct
 {
-    let arr = prompt("Type some text")
+    let arr = [prompt("Type some text")]
     let [firstletter, , , , fifthletter, , , , ninthletter] = arr;
     console.log(firstletter);
     console.log(fifthletter);
@@ -143,6 +156,21 @@ console.log(multiplytable[2][3])
     console.log(secondLetter);
     console.log(fourthLetter);
     console.log(fifthLetter);
+}
+
+//Multiply table rest
+{
+    const multiplytable = [];
+    for (let i = 0; i <= 5; i++) {
+        const row = [];
+        for (let j = 0; j <= 5; j++) {
+            row.push(i * j);
+        }
+        multiplytable.push(row);
+    }
+    const [[...firstarr], [...secondarray], [...thirdarray], [...fourtharray]] = multiplytable
+    const result = [...firstarr, ...secondarray, ...thirdarray, ...fourtharray].filter(item => item !== 0)
+    console.log(result)
 }
 //For alert
 {
@@ -221,6 +249,14 @@ for (const row of multiplytable) {
 document.write("</table>");
 }
 
+//Function capitalize 
+{
+    const capitalize = str => {
+        let result = str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+        return result
+    }
+    console.log(capitalize("cANBerRa"))
+}
 //Map Capitalize
 {
     let userinput = prompt("Type your text here")
@@ -249,4 +285,43 @@ document.write("</table>");
     const replacedwords = words.map(replace)
     const result = replacedwords.join(" ")
     console.log(result)
+}
+
+//Reduce HTML
+{
+    let currencies = ["USD", "EUR", "GBP", "UAH"]
+    let selectHTML = currencies.reduce((accumulator, currency) => {
+        return accumulator + `<option value="${currency}">${currency}</option>`
+    }, "<select>") + "</select>"
+    document.write(selectHTML)
+}
+
+//For Brackets Hell Check
+{
+    const line = prompt();
+    const bracketsStack = [];
+    let i = 0;
+    for (const character of line) {
+            if (character === "[" || character === "(" || character === "{") {
+                bracketsStack.push({ char: character, position: i });
+            } else if (character === "]" || character === ")" || character === "}") {
+                if (bracketsStack.length === 0) {
+                    console.log(`Error: Unmatched closing bracket at position ${i}`);
+                    break;
+                } else {
+                    const lastBracket = bracketsStack.pop()
+                    if ((character === "]" && lastBracket !== "[") || (character === ")" && lastBracket !== "(") || (character === "}" && lastBracket !== "{")) {
+                        console.log(`Error: Mismatched brackets at position ${i}`);
+                        break;
+                    }
+                }
+        }
+        i++
+    }
+    if (bracketsStack.length > 0) {
+        const lastBracket = bracketsStack.pop()
+        console.log(`Error: Unmatched opening bracket at position ${lastBracket.position}`)
+    } else {
+        console.log("Brackets are correctly matched")
+    }
 }

@@ -18,6 +18,7 @@
         [firstparameter] : firstvalue,
         [secondparameter] : secondvalue
     }
+    console.log(result)
 }
 
 //Literals copy
@@ -32,6 +33,7 @@
         ...person,
         [firstparameter] : firstvalue
     }
+    console.log(p2)
 }
 
 //HTML TREE + PARENT + CHANGE OK
@@ -162,7 +164,7 @@
     const length = arr.length;
 }
 
-//
+//Copy delete
 {
     const cat = {
         legs: "paws",
@@ -175,3 +177,68 @@
 
     console.log(newCat);
 }
+
+//Currency real rate
+{
+    const inputCurrency = prompt("Type first currency name").toUpperCase();
+    const targetCurrency = prompt("Type the currency you want to convert to").toUpperCase();
+    const amount = +prompt("Type the cash value")
+    fetch(`https://open.er-api.com/v6/latest/${inputCurrency}`)
+        .then(res => res.json())
+        .then(data => {
+            const exchangeRate = data.rates[targetCurrency];
+            if (exchangeRate) {
+                const result = amount * exchangeRate;
+                console.log(`Convertation proccess ${amount} ${inputCurrency} in ${targetCurrency} = ${result}`)
+            } else {
+                console.log("Incorrect value")
+            }
+        })
+} 
+//Currency drop down
+{
+    const inputCurrency = prompt("Type first currency name").toUpperCase();
+    const targetCurrency = prompt("Type the currency you want to convert to").toUpperCase();
+    fetch(`https://open.er-api.com/v6/latest/${inputCurrency}`)
+        .then(res => res.json())
+        .then(data => {
+            const currencies = Object.keys(data.rates); 
+            if (currencies.length === 0) {
+                console.log('Валюти не знайдено в списку.');
+            } else {
+                let selectHTML = '<select>';
+                for (const currency of currencies) {
+                    selectHTML += `<option value="${currency}">${currency}</option>`;
+                }
+                selectHTML += '</select>';
+                document.write(selectHTML);
+            }
+        })
+}
+
+//Currency table
+{
+    const inputCurrency = prompt("Type first currency name").toUpperCase();
+    const targetCurrency = prompt("Type the currency you want to convert to").toUpperCase();
+    const amount = +prompt("Type the cash value")
+    fetch(`https://open.er-api.com/v6/latest/${inputCurrency}`)
+        .then(res => res.json())
+        .then(data => {
+            const exchangeRate = data.rates[targetCurrency];
+            if (exchangeRate) {
+                const result = amount * exchangeRate;
+                const table = `
+                <table border = "1" cellpadding = "6"
+                <tbody>
+                <tr>
+                <td>${amount} ${inputCurrency}
+                <td>${result} ${targetCurrency}
+                </tr>
+                </tbody>
+                </table>`
+                document.body.innerHTML = table;
+            }
+            })
+}
+
+//Задания table и form я оставлю на потом, когда чуть лучше попрактикуюсь с HTML в JS
