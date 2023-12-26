@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <select id='from'>
+    </select>
+    <select id='to'></select>
+    <div id='rate'></div>
+    <input type='number' id='amount'/>
+    <div id='result'></div>
+    <script>
+        fetch('https://open.er-api.com/v6/latest/USD')
+            .then(res => res.json())
+            .then(data => {
+                const fromSelect = document.getElementById('from');
+                const toSelect = document.getElementById('to');
+                const rateDiv = document.getElementById('rate');
+                for (const currency in data.rates) {
+                    if (currency in data.rates) {
+                        const fromOption = document.createElement('option');
+                        fromOption.value = currency;
+                        fromOption.innerText = currency;
+                        fromSelect.appendChild(fromOption);
+                        const toOption = document.createElement('option');
+                        toOption.value = currency;
+                        toOption.innerText = currency;
+                        toSelect.appendChild(toOption);
+                    }
+                }
+                fromSelect.onchange = updatedRate;
+                toSelect.onchange = updatedRate;
+                const amountInput = document.getElementById('amount');
+                amountInput.oninput = updateResult;
+                function updatedRate() {
+                    const fromCurrency = fromSelect.value;
+                    const toCurrency = toSelect.value;
+                    const rate = data.rates[toCurrency] / data.rates[fromCurrency];
+                    rateDiv.innerText = `${rate.toFixed(4)}`;
+                    updateResult();
+                }
+                function updateResult() {
+                    const fromCurrency = fromSelect.value;
+                    const toCurrency = toSelect.value;
+                    const amount = +(amountInput.value);
+                    if (amount !== isNaN) {
+                        const rate = data.rates[toCurrency] / data.rates[fromCurrency];
+                        const convertedAmount = amount * rate;
+                        document.getElementById('result').innerText = `${toCurrency}: ${convertedAmount.toFixed(2)}`;
+                    } else {
+                        document.getElementById('result').innerText = 'Сума в цільовій валюті: 0.00';
+                    }
+                }
+                updatedRate();
+            })
+    </script>
+    </script>
+</body>
+</html>
