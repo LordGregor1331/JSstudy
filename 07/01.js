@@ -152,4 +152,55 @@ function sort(arr, field, ascending = true) {
     }
 }
 sort(persons, "age");
-console.log ("sotring by age", persons)
+console.log("sotring by age", persons)
+
+//form
+{
+    function formFromObject(obj) {
+        const form = document.createElement("form")
+        for (const key in obj) {
+            const label = document.createElement("label")
+            label.textContent = key + ": "
+            const input = document.createElement("input")
+            if (typeof obj[key] === "number") {
+                input.type = "number"
+            } else if (typeof obj[key] === "boolean") {
+                input.type = "checkbox"
+                input.checked = obj[key]
+            } else {
+                input.type = "text"
+            }
+            input.value = obj[key]
+            label.appendChild(input)
+            form.appendChild(label)
+        }
+        document.body.appendChild(form)
+    }
+    //example
+    const me = {
+        "name": "Jack",
+        "age": 25,
+        "surname": "London",
+        "government" : "Great Britain"
+    }
+    formFromObject(me)
+}
+
+//Table
+{
+    function SortTable(data, sortBy, sortOrder) {
+        data.sort((a, b) => {
+            const firstValue = a[sortBy];
+            const secondValue = b[sortBy];
+            if (sortOrder === 'asc') {
+                return aValue > bValue ? 1 : -1;
+            } else {
+                return aValue < bValue ? 1 : -1;
+            }
+        })
+        const table = document.createElement("table");
+        const tableHead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        const columns = Array.from(new Set(sortedData.flatMap(item => Object.keys(item))));
+    }
+}
