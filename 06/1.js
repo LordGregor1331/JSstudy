@@ -241,4 +241,88 @@
             })
 }
 
-//Задания table и form я оставлю на потом, когда чуть лучше попрактикуюсь с HTML в JS
+//form
+{
+    const car = {
+        "Name": "chevrolet chevelle malibu",
+        "Cylinders": 8,
+        "Displacement": 307,
+        "Horsepower": 130,
+        "Weight_in_lbs": 3504,
+        "Origin": "USA",
+        "in_production": false
+    };
+    const form = document.createElement("form")
+    for (const key in car) {
+        const label = document.createElement("label")
+        label.textContent = key + ": "
+        const input = document.createElement("input")
+        if (typeof car[key] === "number") {
+            input.type = "number"
+        } else if (typeof car[key] === "boolean") {
+            input.type = "checkbox"
+            input.checked = car[key]
+        } else {
+            input.type = "text"
+        }
+        input.value = car[key]
+        label.appendChild(input)
+        form.appendChild(label)
+    }
+    document.body.appendChild(form)
+}
+
+//table
+{
+    const persons = [
+        {
+            name: 'Марія',
+            fatherName: 'Іванівна',
+            surname: 'Іванова',
+            sex: 'female'
+        },
+        {
+            name: 'Миколай',
+            fatherName: 'Іванович',
+            surname: 'Іванов',
+            age: 15
+        },
+        {
+            name: 'Петро',
+            fatherName: 'Іванович',
+            surname: 'Іванов',
+            married: true
+        },
+    ];
+    let columns = []
+    for (const person of persons) {
+        for (const key in person) {
+            if (!columns.includes(key)) {
+                columns.push(key)
+            }
+        }
+    }
+    const table = document.createElement("table")
+    const tableHead = document.createElement("thead")
+    const headerRow = document.createElement("tr")
+    for (const column of columns) {
+        const th = document.createElement("th")
+        th.textContent = column
+        headerRow.appendChild(th)
+    }
+    tableHead.appendChild(headerRow)
+    table.appendChild(tableHead)
+    const tableBody = document.createElement("tbody")
+    for (const person of persons) {
+        const row = document.createElement("tr")
+        for (const column of columns) {
+            const td = document.createElement("td")
+            td.textContent = person[column] !== undefined ? person[column] : ""
+            row.appendChild(td)
+        }
+        tableBody.appendChild(row)
+    }
+    table.appendChild(tableBody)
+    // console.log(table.outerHTML)
+    document.body.appendChild(table)
+}
