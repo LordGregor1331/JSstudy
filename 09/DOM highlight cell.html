@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <style>
+        td.highlighted {
+            background-color: yellow;
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+      <table border="1">
+        <tbody id="tableBody">
+            <tr>
+                <td>String 1, cell 1</td>
+                <td>String 1, cell 2</td>
+            </tr>
+            <tr>
+                <td>String 2, cell 1</td>
+                <td>String 2, cell 2</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        const tableBody = document.getElementById("tableBody");
+        const cells = tableBody.getElementsByTagName("td");
+
+        for (let i = 0; i < cells.length; i++) {
+            const cell = cells[i];
+
+            cell.addEventListener("mouseover", function () {
+                this.classList.add("highlighted");
+            });
+
+            cell.addEventListener("mouseout", function () {
+                this.classList.remove("highlighted");
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        td.highlighted {
+            background-color: yellow;
+        }
+        tr.highlighted-row td {
+            background-color: lightblue;
+        }
+        td.highlighted-col {
+            background-color: lightgreen;
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <table border="1">
+        <tbody id="tableBody">
+            <tr>
+                <td>String 1, cell 1</td>
+                <td>String 1, cell 2</td>
+                <td>String 1, cell 3</td>
+            </tr>
+            <tr>
+                <td>String 2, cell 1</td>
+                <td>String 2, cell 2</td>
+                <td>String 2, cell 3</td>
+            </tr>
+            <tr>
+                <td>String 3, cell 1</td>
+                <td>String 3, cell 2</td>
+                <td>String 3, cell 3</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        const tableBody = document.getElementById("tableBody");
+        const rows = tableBody.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const cells = row.getElementsByTagName("td");
+
+            for (let j = 0; j < cells.length; j++) {
+                const cell = cells[j];
+
+                cell.addEventListener("mouseover", function () {
+                    this.classList.add("highlighted");
+
+                    // Підсвітити рядок та стовпець
+                    row.classList.add("highlighted-row");
+                    for (let k = 0; k < rows.length; k++) {
+                        if (k !== i) {
+                            rows[k].classList.remove("highlighted-row");
+                        }
+                    }
+
+                    const allCellsInColumn = document.querySelectorAll("td:nth-child(" + (j + 1) + ")");
+                    for (let k = 0; k < allCellsInColumn.length; k++) {
+                        allCellsInColumn[k].classList.add("highlighted-col");
+                    }
+                });
+
+                cell.addEventListener("mouseout", function () {
+                    this.classList.remove("highlighted");
+                    row.classList.remove("highlighted-row");
+                    const allCellsInColumn = document.querySelectorAll("td:nth-child(" + (j + 1) + ")");
+                    for (let k = 0; k < allCellsInColumn.length; k++) {
+                        allCellsInColumn[k].classList.remove("highlighted-col");
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
