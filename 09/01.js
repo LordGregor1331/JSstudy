@@ -134,4 +134,64 @@
     console.log(multiplyTable[2][3])
 }
 
-//work in progress
+//read array of objects
+
+{
+    function readArrayOfObjects() {
+        const arrayOfObjects = [];
+        let continueEntering = true;
+
+        while (continueEntering) {
+            const object = {};
+            let continueEnteringKeys = true;
+
+            while (continueEnteringKeys) {
+                const key = prompt("Type key:");
+                if (key === null) {
+                    continueEnteringKeys = false;
+                    break;
+                }
+
+                const value = prompt("Type value for key" + key + "':");
+                object[key] = value;
+            }
+
+            arrayOfObjects.push(object);
+
+            continueEntering = confirm("Do you want to create one more object?");
+        }
+
+        return arrayOfObjects;
+    }
+
+    const objectsArray = readArrayOfObjects();
+    console.log(objectsArray);
+}
+
+//diamond
+{
+    function diamond(size) {
+        if (size % 2 === 0) {
+            size++
+        }
+
+        const middle = Math.floor(size / 2);
+
+        for (let i = 0; i < size; i++) {
+            let row = '';
+
+            for (let j = 0; j < size; j++) {
+                if (Math.abs(j - middle) <= i - middle) {
+                    row += '#';
+                } else {
+                    row += '.';
+                }
+            }
+
+            console.log(row);
+        }
+    }
+
+    const size = 10
+    diamond(size);
+}

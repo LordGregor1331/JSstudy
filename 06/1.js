@@ -326,3 +326,15 @@
     // console.log(table.outerHTML)
     document.body.appendChild(table)
 }
+
+//calc func
+function calculateElectricityCost() {
+    let firstParameter = +prompt("Введите количество использованных киловатт");
+    if (!isNaN(firstParameter)) {
+        let result = firstParameter * 2.44;
+        alert("To pay " + result.toFixed(2) + " UAH");
+    } else {
+        alert("Incorrect value");
+    }
+}
+calculateElectricityCost()

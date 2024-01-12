@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multiply Table</title>
+</head>
+<body>
+    <table border="1">
+        <caption>Multiply Table</caption>
+        <tbody id="multiplicationTable">
+        </tbody>
+    </table>
+
+    <script>
+        // Отримуємо посилання на tbody елемент таблиці
+        const tableBody = document.getElementById("multiplicationTable");
+
+        // Задаємо розмір таблиці
+        const numRows = 10;
+        const numCols = 10;
+
+        // Заповнюємо таблицю множення
+        for (let i = 1; i <= numRows; i++) {
+            const row = document.createElement("tr");
+
+            for (let j = 1; j <= numCols; j++) {
+                const cell = document.createElement("td");
+                cell.innerText = i * j;
+                row.appendChild(cell);
+            }
+
+            tableBody.appendChild(row);
+        }
+    </script>
+</body>
+</html>
