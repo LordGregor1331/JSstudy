@@ -204,3 +204,15 @@ console.log("sotring by age", persons)
         const columns = Array.from(new Set(sortedData.flatMap(item => Object.keys(item))));
     }
 }
+
+//calc func
+function calculateElectricityCost() {
+    let firstParameter = +prompt("Введите количество использованных киловатт");
+    if (!isNaN(firstParameter)) {
+        let result = firstParameter * 2.44;
+        alert("To pay " + result.toFixed(2) + " UAH");
+    } else {
+        alert("Incorrect value");
+    }
+}
+calculateElectricityCost()

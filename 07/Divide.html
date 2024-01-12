@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type='number' id="firstNumber" />
+    <input type='number' id="secondNumber" />
+    <div id="divisionResult">
+    </div> 
+    <script>
+    const calcResult = () => {
+        const firstValue = parseFloat(firstNumber.value);
+        const secondValue = parseFloat(secondNumber.value);
+        const resultDiv = document.getElementById("divisionResult");
+
+        if (!isNaN(firstValue) && !isNaN(secondValue) && secondValue !== 0) {
+            const divisionResult = Math.floor(firstValue / secondValue);
+            resultDiv.innerHTML = "Результат поділу: <strong>" + divisionResult + "</strong>";
+        } else {
+            resultDiv.innerHTML = "Недійсні вхідні дані або ділення на нуль.";
+        }
+    }
+    
+    firstNumber.oninput = secondNumber.oninput = calcResult;
+</script>
+</body>
+</html>
