@@ -116,38 +116,51 @@
         </div>
     </div>
     <script>
-        const store = {
+    const initialState = {
+        store: {
             crisps: 100,
             beer: 100,
             juice: 100
-        }
-        const prices = {
-            crisps: 30,
-            beer: 20,
-            juice: 40
-        }
-        const inventory = {
+        },
+        inventory: {
             crisps: 0,
             beer: 0,
             juice: 0
+        },
+        balance: 500
+    };
+    function reducer(state, action) {
+        switch (action.type) {
+            case 'BUY_ITEM':
+                const { item, price } = action.payload;
+                if (state.store[item] > 0 && state.balance >= price) {
+                    return {
+                        ...state,
+                        store: { ...state.store, [item]: state.store[item] - 1 },
+                        inventory: { ...state.inventory, [item]: state.inventory[item] + 1 },
+                        balance: state.balance - price
+                    };
+                }
+                return state
+            default:
+                return state
         }
-        let balance = 500
-        function updateDisplay() {
-        document.getElementById('crisps-store').innerText = `Crisps: ${store.crisps}`;
-        document.getElementById('beer-store').innerText = `Beer: ${store.beer}`;
-        document.getElementById('juice-store').innerText = `Juice: ${store.juice}`;
-        document.getElementById('crisps-inv').innerText = `Crisps: ${inventory.crisps}`;
-        document.getElementById('beer-inv').innerText = `Beer: ${inventory.beer}`;
-        document.getElementById('juice-inv').innerText = `Juice: ${inventory.juice}`;
-        document.getElementById('balance').innerText = `BALANCE: ${balance}`;
+    }
+    let state = initialState;
+    function dispatch(action) {
+        state = reducer(state, action)
+        updateDisplay()
+    }
+    function updateDisplay() {
+        for (const item in state.store) {
+            document.getElementById(`${item}-store`).innerText = `${item.charAt(0).toUpperCase() + item.slice(1)}: ${state.store[item]}`
+            document.getElementById(`${item}-inv`).innerText = `${item.charAt(0).toUpperCase() + item.slice(1)}: ${state.inventory[item]}`
         }
-        function buyItem(item) {
-        if (store[item] > 0 && balance >= prices[item]) {
-            store[item]--;
-            inventory[item]++;
-            balance -= prices[item];
-            updateDisplay();
-        }
+        document.getElementById('balance').innerText = `BALANCE: ${state.balance}`
+    }
+    function buyItem(item) {
+        const prices = { crisps: 30, beer: 20, juice: 40 }
+        dispatch({ type: 'BUY_ITEM', payload: { item, price: prices[item] } })
     }
     document.addEventListener('DOMContentLoaded', updateDisplay);
     </script>
