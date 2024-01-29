@@ -222,14 +222,10 @@ const table2 = deepCopy(table) //при попытке вызвать deepCopy(t
 {
     function getElementById(idToFind) {
         try {
-            // Функція walker, яка рекурсивно обходить DOM-дерево
             function walker(node) {
-                // Перевірка наявності id у поточного вузла
                 if (node.id === idToFind) {
-                    throw node; // Викидаємо виняток з знайденим елементом
+                    throw node; 
                 }
-
-                // Рекурсивний обхід дочірніх елементів
                 for (let child of node.children) {
                     walker(child);
                 }
