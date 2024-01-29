@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        #rack{
+            background-image: url(./Rack.png);
+            display: flex;
+            position: relative;
+            height: 100vh; 
+            width: 80%; 
+            background-repeat: no-repeat;
+            align-items: center;
+            justify-content: center;
+        }
+        .food{
+            position: relative;
+            width: 6%;
+            height: 11%;
+            margin: 0 10% 1% 5%;
+            display: flex;
+            justify-content: center;
+        }
+        #crisps{
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-image: url(https://content2.rozetka.com.ua/goods/images/original/313194226.jpg);
+        }
+        #beer{
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-image: url(./Beer1.png);
+        }
+        #juice{
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-image: url(./Juice.png);
+        }
+ #inventory {
+            display: flex;
+            flex-direction: column; 
+            justify-content: space-evenly;
+            align-items: center; 
+            margin-left: 10px;
+        }
+        .cage{
+            width: 70px;
+            height: 70px;
+            background-color: beige;
+            border: 2px solid brown;
+            margin-top: 5px;
+            display: flex;
+        }
+        p{
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .cage1{
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-image: url(https://content2.rozetka.com.ua/goods/images/original/313194226.jpg);
+        }
+        .cage2{
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-image: url(./Beer1.png);
+        }
+        .cage3{
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-image: url(./Juice.png);
+        }
+        .inv-value{
+            margin-left: 75px;
+            width: 150px;
+        }
+        .store-value{
+            margin-top: 80px;
+            text-align: center;
+        }
+        .store-price{
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+ <div class="container">
+        <div id="rack">
+            <div class="food" id="crisps" onclick="buyItem('crisps')">
+            <h3 id="crisps-store" class="store-value">Crisps: 100</h3>
+            <h3 class="store-value store-price">Price: 30</h3>
+            </div>
+            <div class="food" id="beer" onclick="buyItem('beer')">
+            <h3 id="beer-store" class="store-value">Beer: 100</h3>
+            <h3 class="store-value store-price">Price: 20</h3>
+            </div>
+            <div class="food" id="juice" onclick="buyItem('juice')">
+            <h3 id="juice-store" class="store-value">Juice: 100</h3>
+            <h3 class="store-value store-price">Price: 40</h3>
+            </div>
+        </div>
+        <div id="inventory">
+            <div class="cage cage1" >
+                <h3 id="crisps-inv" class="inv-value">Crisps: 0</h3></div>
+            <div class="cage cage2">
+                <h3 id="beer-inv" class="inv-value">Beer: 0</h3>
+            </div>
+            <div class="cage cage3"><h3 id="juice-inv" class="inv-value">Juice: 0</h3></div>
+            <h2 id="balance">BALANCE: 500</h2>
+        </div>
+    </div>
+    <script>
+        const store = {
+            crisps: 100,
+            beer: 100,
+            juice: 100
+        }
+        const prices = {
+            crisps: 30,
+            beer: 20,
+            juice: 40
+        }
+        const inventory = {
+            crisps: 0,
+            beer: 0,
+            juice: 0
+        }
+        let balance = 500
+        function updateDisplay() {
+        document.getElementById('crisps-store').innerText = `Crisps: ${store.crisps}`;
+        document.getElementById('beer-store').innerText = `Beer: ${store.beer}`;
+        document.getElementById('juice-store').innerText = `Juice: ${store.juice}`;
+        document.getElementById('crisps-inv').innerText = `Crisps: ${inventory.crisps}`;
+        document.getElementById('beer-inv').innerText = `Beer: ${inventory.beer}`;
+        document.getElementById('juice-inv').innerText = `Juice: ${inventory.juice}`;
+        document.getElementById('balance').innerText = `BALANCE: ${balance}`;
+        }
+        function buyItem(item) {
+        if (store[item] > 0 && balance >= prices[item]) {
+            store[item]--;
+            inventory[item]++;
+            balance -= prices[item];
+            updateDisplay();
+        }
+    }
+    document.addEventListener('DOMContentLoaded', updateDisplay);
+    </script>
+</body>
+</html>
