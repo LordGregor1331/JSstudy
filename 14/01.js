@@ -217,19 +217,3 @@ const table2 = deepCopy(table) //при попытке вызвать deepCopy(t
     console.log(JSON.parse(jsonStringArr))
     console.log(JSON.parse(jsonStringTable))
 }
-
-//Get element by ID
-{
-    function getElementById(idToFind) {
-        try {
-            function walker(node) {
-                if (node.id === idToFind) {
-                    throw node; 
-                }
-                for (let child of node.children) {
-                    walker(child);
-                }
-            }
-        }
-    }
-}
