@@ -43,6 +43,66 @@
     console.log(b.getFullName()); // Выведет 'Ганна Іванова'
 }
 
+//Store
+{
+    function Store(reducer, initialState) {
+        let state = initialState;
+        const cbs = []
+        function updateDisplay() {
+            console.log("State updated", state);
+        }
+        this.getState = function () {
+            return state
+        }
+        this.dispatch = function (action) {
+            state = reducer(state, action);
+            updateDisplay();
+            cbs.forEach(cb => cb());
+        }
+        this.subscribe = function (cb) {
+            cbs.push(cb);
+            return function unsubscribe() {
+                const index = cbs.indexOf(cb)
+                if (index > -1) {
+                    cbs.splice(index, 1)
+                }
+            }
+        }
+    }
+    const initialState = {
+        store: {
+            crisps: 100,
+            beer: 100,
+            juice: 100
+        },
+        inventory: {
+            crisps: 0,
+            beer: 0,
+            juice: 0
+        },
+        balance: 500
+    }
+    function reducer(state, action) {
+        switch (action.type) {
+            case 'BUY_ITEM':
+                const { item, price } = action.payload
+                if (state.store[item] > 0 && state.balance >= price) {
+                    return {
+                        ...state,
+                        store: { ...state.store, [item]: state.store[item] - 1 },
+                        inventory: { ...state.inventory, [item]: state.inventory[item] + 1 },
+                        balance: state.balance - price
+                    }
+                }
+                return state
+            default:
+                return state
+        }
+    }
+    const store = new Store(reducer, initialState)
+    store.dispatch({ type: 'BUY_ITEM', payload: { item: 'crisps', price: 10 } })
+}
+
 //Password
 
 
@@ -200,3 +260,4 @@ function LoginForm(parent) {
         loginButton.addEventListener('click', callback);
     }
 }
+
