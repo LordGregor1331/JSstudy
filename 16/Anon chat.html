@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #chatContainer {
+            width: 100vw;
+            height: fit-content;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <input type="text" id="nickInput" placeholder="Your Nickname">
+        <input type="text" id="messageInput" placeholder="Your Message">
+        <button id="sendButton">Send</button>
+    </div>
+    <div id="chatContainer"></div>    
+    <script>
+function jsonPost(url, data) {
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok')
+        }
+        return response.json()
+    })
+}
+let lastMessageId = 0
+async function sendMessage(nick, message) {
+    try {
+        await jsonPost("http://students.a-level.com.ua:10012", { func: 'addMessage', nick, message})
+        await getMessages()
+    }
+    catch (error) {
+        console.error("Failed to send message: ", error)
+    }
+}
+async function getMessages() {
+    try {
+        const response = await jsonPost("http://students.a-level.com.ua:10012", { func: 'getMessages', messageId: lastMessageId })
+        const messages = response.data
+        lastMessageId = response.nextMessageId
+        updateChat(messages)
+    } catch (error) {
+        console.error("Failed to get messages: ", error)
+    }
+}
+function updateChat(messages) {
+    const chatContainer = document.getElementById("chatContainer")
+    messages.forEach(message => {
+        const messageElement = document.createElement('div')
+        messageElement.textContent = `${message.nick}: ${message.message}`
+        chatContainer.appendChild(messageElement)
+    })
+    chatContainer.scrollTop = chatContainer.scrollHeight
+}
+function initChat() {
+    document.getElementById("sendButton").addEventListener("click", () => {
+        const nick = document.getElementById("nickInput").value.trim()
+        const message = document.getElementById("messageInput").value.trim()
+        if (nick && message) {
+            sendMessage(nick, message) 
+            document.getElementById("messageInput").value = ''
+        }
+    })
+    setInterval(getMessages, 5000)
+}
+initChat()
+    </script>
+</body>
+</html>
