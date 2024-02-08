@@ -151,43 +151,32 @@ if (isNaN(amount)) {
 }
 
 //Scissors paper rock
-let value = prompt("Scissors paper rock?")
-value = value.toLowerCase();
-let answer = Math.random(); 
-if (answer <= 0.333) {
-    answer = "scissors";
-    alert("Scissors")
-} else if (answer >= 0.334 && answer <= 0.666) {
-    answer = "rock";
-    alert("Rock")
-} else if (answer >= 0.667 && answer <= 1) {
-    answer = "paper";
-    alert("Paper")
-}
-if (value === "scissors") {
-    if (answer === "scissors") {
-        alert("No winner")
-    } else if (answer === "rock") {
-        alert("You lose")
-    } else if (answer === "paper") {
-        alert("You win!")
+{
+    let value = prompt("Scissors, paper, rock?").toLowerCase();
+    let randomValue = Math.random();
+    let answer
+    if (randomValue <= 0.333) {
+        answer = "scissors"
+    } else if (randomValue <= 0.666) {
+        answer = "rock"
+    } else {
+        answer = "paper"
     }
-} else if (value === "rock") {
-    if (answer === "scissors") {
-        alert("You win")
-    } else if (answer === "rock") {
+    alert(answer)
+    if (value === answer) {
         alert("No winner")
-    } else if (answer === "paper") {
-        alert("You lose")
+    } else {
+        let winCondition = (value === "scissors" && answer === "paper") ||
+            (value === "paper" && answer === "rock") ||
+            (value === "rock" && answer === "scissors")
+        if (winCondition) {
+            alert("You win!")
+        } else {
+            if (value !== "scissors" && value !== "rock" && value !== "paper") {
+                alert("Incorrect value")
+            } else {
+                alert("You lose")
+            }
+        }
     }
-} else if (value === "paper") {
-    if (answer === "scissors") {
-        alert("You lose")
-    } else if (answer === "rock") {
-        alert("You win")
-    } else if (answer === "paper") {
-        alert("No winner")
-    }
-} else {
-    alert("Incorrect value")
 }
