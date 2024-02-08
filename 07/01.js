@@ -143,13 +143,11 @@ var persons = [
     { name: "Яків", age: 12 },
 ]
 function sort(arr, field, ascending = true) {
-    if (ascending) {
-        arr.sort((a, b) => {
-            if (a[field] > b[field]) return -1;
-            if (a[field] < b[field]) return 1;
-            return 0
-        })
-    }
+    arr.sort((a, b) => {
+        if (a[field] < b[field]) return ascending ? -1 : 1;
+        if (a[field] > b[field]) return ascending ? 1 : -1;
+        return 0;
+    })
 }
 sort(persons, "age");
 console.log("sotring by age", persons)
@@ -184,25 +182,6 @@ console.log("sotring by age", persons)
         "government" : "Great Britain"
     }
     formFromObject(me)
-}
-
-//Table
-{
-    function SortTable(data, sortBy, sortOrder) {
-        data.sort((a, b) => {
-            const firstValue = a[sortBy];
-            const secondValue = b[sortBy];
-            if (sortOrder === 'asc') {
-                return aValue > bValue ? 1 : -1;
-            } else {
-                return aValue < bValue ? 1 : -1;
-            }
-        })
-        const table = document.createElement("table");
-        const tableHead = document.createElement("thead");
-        const headerRow = document.createElement("tr");
-        const columns = Array.from(new Set(sortedData.flatMap(item => Object.keys(item))));
-    }
 }
 
 //calc func

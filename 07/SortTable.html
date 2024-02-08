@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sorted Table</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+var persons = [
+    { name: "Іван", age: 17 },
+    { name: "Марія", age: 35 },
+    { name: "Олексій", age: 73 },
+    { name: "Яків", age: 12 },
+]
+function SortTable(data, sortBy, sortOrder = 'up') {
+    data.sort((a, b) => {
+        const firstValue = a[sortBy]
+        const secondValue = b[sortBy]
+        if (sortOrder === 'up') {
+            return firstValue > secondValue ? 1 : (firstValue < secondValue ? -1 : 0)
+        } else {
+            return firstValue < secondValue ? 1 : (firstValue > secondValue ? -1 : 0)
+        }
+    })
+    const table = document.createElement("table")
+    const tableHead = document.createElement("thead")
+    const headerRow = document.createElement("tr")
+    const columns = Object.keys(data[0])
+    columns.forEach(column => {
+        const th = document.createElement("th")
+        th.textContent = column
+        headerRow.appendChild(th)
+    })
+    tableHead.appendChild(headerRow)
+    table.appendChild(tableHead)
+    const tableBody = document.createElement("tbody")
+    data.forEach(person => {
+        const row = document.createElement("tr")
+        columns.forEach(column => {
+            const td = document.createElement("td")
+            td.textContent = person[column]
+            row.appendChild(td)
+        })
+        tableBody.appendChild(row)
+    })
+    table.appendChild(tableBody)
+    document.body.appendChild(table)
+}
+SortTable(persons, "age", "up");
+</script>
+</body>
+</html>
