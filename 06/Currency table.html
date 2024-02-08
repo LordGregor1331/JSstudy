@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px;
+        text-align: center;
+    }
+    table {
+        width: 100%;
+    }
+</style>
+</head>
+<body>
+    <script>
+        const exchangeRates = {
+    "USD": {"USD": 1, "EUR": 1.03, "UAH": 36.82, "PLN": 4.94},
+    "EUR": {"USD": 0.97, "EUR": 1, "UAH": 35.80, "PLN": 4.81},
+    "UAH": {"USD": 0.027, "EUR": 0.028, "UAH": 1, "PLN": 0.13},
+    "PLN": {"USD": 0.2, "EUR": 0.21, "UAH": 7.45, "PLN": 1}
+}
+let currencies = Object.keys(exchangeRates)
+let table = '<table><tr><th>Currency</th>'
+currencies.forEach(currency => {
+    table += `<th>${currency}</th>`
+})
+table += '</tr>'
+currencies.forEach(rowCurrency => {
+    table += `<tr><td>${rowCurrency}</td>`
+    currencies.forEach(colCurrency => {
+        table += `<td>${exchangeRates[rowCurrency][colCurrency]}</td>`
+    });
+    table += '</tr>'
+})
+
+table += '</table>'
+document.body.innerHTML = table
+    </script>
+</body>
+</html>

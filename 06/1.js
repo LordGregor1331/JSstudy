@@ -39,95 +39,54 @@
 //HTML TREE + PARENT + CHANGE OK
 {
     let table = {
-        tagName: "body", 
+        tagName: "body",
         children: [
             {
                 tagName: "div",
-                parent : null,
+                parent: null,
                 children: [
                     {
                         tagName: "span",
-                        parent : 0,
+                        parent: 0,
                         children: ["Enter a data please:"]
                     },
                     {
                         tagName: "br",
-                        parent : 0
+                        parent: 0
                     },
                     {
                         tagName: "input",
-                        parent : 0,
-                        attrs: [
-                            {
-                                name: "type",
-                        value: "text"
-                            },
-                            {
-                                name: "id",
-                        value: "name"
-                            }
-                        ]
+                        parent: 0,
+                        attrs: [{ name: "type", value: "text" }, { name: "id", value: "name" }]
                     },
                     {
                         tagName: "input",
-                        parent : 0,
-                        attrs: [
-                            {
-                                name: "type",
-                        value: "text"
-                            },
-                            {
-                                name: "id",
-                                value: "surname"
-                            }
-                        ]
+                        parent: 0,
+                        attrs: [{ name: "type", value: "text" }, { name: "id", value: "surname" }]
                     }
                 ]
             },
             {
                 tagName: "div",
-                parent : null,
-                children :[
+                parent: null,
+                children: [
                     {
                         tagName: "button",
-                        parent : 1,
-                        attrs: [
-                            {
-                                name: "id",
-                                value: "ok"
-                            }
-                        ],
+                        parent: 1,
+                        attrs: [{ name: "id", value: "ok" }],
                         children: ["OK"]
                     },
                     {
                         tagName: "button",
-                        parent : 1,
-                        attrs: [
-                            {
-                                name: "id",
-                                value : "cancel"
-                            }
-                        ],
-                        children : ["Cancel"]
+                        parent: 1,
+                        attrs: [{ name: "id", value: "cancel" }],
+                        children: ["Cancel"]
                     }
                 ]
             }
         ]
     }
-    {
-        const { children: [firstdiv] } = table;
-        const { children: [span] } = firstdiv;
-        const spantext = span.children[0];
-        console.log(spantext);
-    }
-    {
-        const { children: [, seconddiv] } = table;
-        const { children: [button1, button2] } = seconddiv;
-        const secondbuttontext = button2.children[0];
-        console.log(secondbuttontext);
-    }
 }
-
 //Destruct array
 {
     let arr = [1, 2, 3, 4, 5, "a", "b", "c"]
@@ -160,8 +119,13 @@
 //Destruct 3
 {
     let arr = [1, 2, 3, 4, 5, 6, 7, 10]
-    const [a, b, ...rest] = arr;
+    const obj = { ...arr }
+    const { 0: a, 1: b, ...rest } = obj
     const length = arr.length;
+    console.log(a)
+    console.log(b)
+    console.log(rest)
+    console.log(length)
 }
 
 //Copy delete
@@ -216,31 +180,6 @@
         })
 }
 
-//Currency table
-{
-    const inputCurrency = prompt("Type first currency name").toUpperCase();
-    const targetCurrency = prompt("Type the currency you want to convert to").toUpperCase();
-    const amount = +prompt("Type the cash value")
-    fetch(`https://open.er-api.com/v6/latest/${inputCurrency}`)
-        .then(res => res.json())
-        .then(data => {
-            const exchangeRate = data.rates[targetCurrency];
-            if (exchangeRate) {
-                const result = amount * exchangeRate;
-                const table = `
-                <table border = "1" cellpadding = "6"
-                <tbody>
-                <tr>
-                <td>${amount} ${inputCurrency}
-                <td>${result} ${targetCurrency}
-                </tr>
-                </tbody>
-                </table>`
-                document.body.innerHTML = table;
-            }
-            })
-}
-
 //form
 {
     const car = {
@@ -251,25 +190,23 @@
         "Weight_in_lbs": 3504,
         "Origin": "USA",
         "in_production": false
-    };
-    const form = document.createElement("form")
-    for (const key in car) {
-        const label = document.createElement("label")
-        label.textContent = key + ": "
-        const input = document.createElement("input")
-        if (typeof car[key] === "number") {
-            input.type = "number"
-        } else if (typeof car[key] === "boolean") {
-            input.type = "checkbox"
-            input.checked = car[key]
-        } else {
-            input.type = "text"
-        }
-        input.value = car[key]
-        label.appendChild(input)
-        form.appendChild(label)
     }
-    document.body.appendChild(form)
+    let formHTML = '<form>'
+    for (const key in car) {
+        let inputType = 'text'
+        let extraAttributes = ''
+        let inputValue = car[key]
+        if (typeof car[key] === "number") {
+            inputType = "number";
+        } else if (typeof car[key] === "boolean") {
+            inputType = "checkbox";
+            extraAttributes = car[key] ? ' checked' : ''
+            inputValue = ''
+        }
+        formHTML += `<label>${key}: <input type="${inputType}" value="${inputValue}"${extraAttributes}></label><br>`
+    }
+    formHTML += '</form>'
+    document.body.innerHTML += formHTML
 }
 
 //table
@@ -293,36 +230,27 @@
             surname: 'Іванов',
             married: true
         },
-    ];
+    ]
     let columns = []
-    for (const person of persons) {
-        for (const key in person) {
+    persons.forEach(person => {
+        Object.keys(person).forEach(key => {
             if (!columns.includes(key)) {
                 columns.push(key)
             }
-        }
-    }
-    const table = document.createElement("table")
-    const tableHead = document.createElement("thead")
-    const headerRow = document.createElement("tr")
-    for (const column of columns) {
-        const th = document.createElement("th")
-        th.textContent = column
-        headerRow.appendChild(th)
-    }
-    tableHead.appendChild(headerRow)
-    table.appendChild(tableHead)
-    const tableBody = document.createElement("tbody")
-    for (const person of persons) {
-        const row = document.createElement("tr")
-        for (const column of columns) {
-            const td = document.createElement("td")
-            td.textContent = person[column] !== undefined ? person[column] : ""
-            row.appendChild(td)
-        }
-        tableBody.appendChild(row)
-    }
-    table.appendChild(tableBody)
-    // console.log(table.outerHTML)
-    document.body.appendChild(table)
+        })
+    })
+    let tableHTML = '<table><thead><tr>'
+    columns.forEach(column => {
+        tableHTML += `<th>${column}</th>`
+    })
+    tableHTML += '</tr></thead><tbody>'
+    persons.forEach(person => {
+        tableHTML += '<tr>'
+        columns.forEach(column => {
+            tableHTML += `<td>${person[column] !== undefined ? person[column] : ''}</td>`
+        })
+        tableHTML += '</tr>'
+    })
+    tableHTML += '</tbody></table>'
+    document.body.innerHTML += tableHTML;
 }
