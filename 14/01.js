@@ -1,56 +1,56 @@
 //HTML TREE
 
 
-    function HTMLTree(node) {
-        if (!node.tagName) {
-            return ''
-        }
-        let html = `<${node.tagName}`
-        if (node.attributes) {
-            for (let attribute in node.attributes) {
-                html += ` ${attribute}='${node.attributes[attribute]}'`
-            }
-        }
-        html += '>'
-        if (node.children) {
-            for (let child of node.children) {
-                html += (typeof child === 'string') ? child : HTMLTree(child)
-            }
-        }
-        html += `</${node.tagName}`
-        return html
+function HTMLTree(node) {
+    if (!node.tagName) {
+        return ''
     }
-    let table = {
-        tagName: 'table',
-        attributes: {
-            border: "1",
+    let html = `<${node.tagName}`
+    if (node.attributes) {
+        for (let attribute in node.attributes) {
+            html += ` ${attribute}='${node.attributes[attribute]}'`
+        }
+    }
+    html += '>'
+    if (node.children) {
+        for (let child of node.children) {
+            html += (typeof child === 'string') ? child : HTMLTree(child)
+        }
+    }
+    html += `</${node.tagName}`
+    return html
+}
+let table = {
+    tagName: 'table',
+    attributes: {
+        border: "1",
+    },
+    children: [
+        {
+            tagName: 'tr',
+            children: [
+                {
+                    tagName: "td",
+                    children: ["1x1"]
+                },
+            ]
         },
-        children: [
-            {
-                tagName: 'tr',
-                children: [
-                    {
-                        tagName: "td",
-                        children: ["1x1"]
-                    },
-                ]
-            },
-            {
-                tagName: 'tr',
-                children: [
-                    {
-                        tagName: "td",
-                        children: ["2x1"],
-                    },
-                    {
-                        tagName: "td",
-                        children: ["2x2"]
-                    },
-                ]
-            }
-        ]
-    }
-    document.write(HTMLTree(table))
+        {
+            tagName: 'tr',
+            children: [
+                {
+                    tagName: "td",
+                    children: ["2x1"],
+                },
+                {
+                    tagName: "td",
+                    children: ["2x2"]
+                },
+            ]
+        }
+    ]
+}
+document.write(HTMLTree(table))
 
 //DOM TREE
 

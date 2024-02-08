@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style></style>
+</head>
+<body>
+    <div id="testElement1">Test 1</div>
+    <div id="testElement2">Test 2</div>
+    <script>
+        function getElementById(idToFind) {
+    function walker(parent) {
+        if (parent.id === idToFind) {
+            throw parent
+        }
+        for (let child of parent.children) {
+            walker(child)
+        }
+    }
+    try {
+        walker(document.body)
+    } catch (result) {
+        if (result instanceof HTMLElement) {
+            return result
+        }
+        throw result
+    }
+    return null
+}
+const foundElement = getElementById('testElement1');
+console.log(foundElement);
+    </script>
+</body>
+</html>
