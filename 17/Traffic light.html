@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="traffic-light">
+    <div id="red" style="width: 50px; height: 50px; background-color: grey; margin: 5px;"></div>
+    <div id="yellow" style="width: 50px; height: 50px; background-color: grey; margin: 5px;"></div>
+    <div id="green" style="width: 50px; height: 50px; background-color: grey; margin: 5px;"></div>
+</div>
+<script>
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+    async function trafficLight(element, greenDuration, yellowDuration, redDuration) {
+    const greenLight = element.querySelector("#green")
+    const yellowLight = element.querySelector("#yellow")
+    const redLight = element.querySelector("#red")
+    while (true) {
+        greenLight.style.backgroundColor = "green"
+        yellowLight.style.backgroundColor = "grey"
+        redLight.style.backgroundColor = "grey"
+        await delay(greenDuration);
+        greenLight.style.backgroundColor = "grey"
+        yellowLight.style.backgroundColor = "yellow"
+        await delay(yellowDuration);
+        yellowLight.style.backgroundColor = "grey"
+        redLight.style.backgroundColor = "red"
+        await delay(redDuration)
+    }
+}
+trafficLight(document.getElementById("traffic-light"), 3000, 2000, 3000)
+</script>
+</body>
+</html>
