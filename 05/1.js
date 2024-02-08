@@ -162,14 +162,19 @@ console.log(multiplytable[2][3])
 {
     const multiplytable = [];
     for (let i = 0; i <= 5; i++) {
-        const row = [];
+        const row = []
         for (let j = 0; j <= 5; j++) {
-            row.push(i * j);
+            row.push(i * j)
         }
         multiplytable.push(row);
     }
-    const [[...firstarr], [...secondarray], [...thirdarray], [...fourtharray]] = multiplytable
-    const result = [...firstarr, ...secondarray, ...thirdarray, ...fourtharray].filter(item => item !== 0)
+    const [, ...firstarr] = multiplytable[0]
+    const [, ...secondarray] = multiplytable[1]
+    const [, ...thirdarray] = multiplytable[2]
+    const [, ...fourtharray] = multiplytable[3]
+    const [, ...fiftharray] = multiplytable[4]
+    const [, ...sixtharray] = multiplytable[5]
+    const result = [...firstarr, ...secondarray, ...thirdarray, ...fourtharray, ...fiftharray, ...sixtharray];
     console.log(result)
 }
 //For alert
@@ -259,8 +264,11 @@ document.write("</table>");
 }
 //Map Capitalize
 {
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+    }
     let userinput = prompt("Type your text here")
-    let words = userinput.split(" ").map(x => x.capitalize());
+    let words = userinput.split(" ").map(word => capitalize(word))
     let result = words.join(" ")
     console.log(result)
 }
@@ -271,7 +279,11 @@ document.write("</table>");
     const userinput = prompt("Type some text here")
     const words = userinput.split(" ")
     const result = !words.filter((word) => badlexics.includes(word.toLowerCase())).length;
-    console.log(result)
+    if (containsBadWords) {
+        console.log("The text contains inappropriate words.")
+    } else {
+        console.log("The text does not contain any inappropriate words.")
+    }
 }
 
 //BEEP LEXICS
