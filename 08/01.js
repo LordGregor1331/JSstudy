@@ -192,15 +192,21 @@
 
 //switch if
 {
-    let color = prompt("Введіть колір", "");
-    if (color === "red" || color === "black") {
+    let color = prompt("Введіть колір", "")
+    if (color === "red") {
         document.write("<div style='background-color: black; color: white;'>чорний</div>")
-        document.write("<div style='background-color: red;'>червоний</div>");
+        document.write("<div style='background-color: red; color: white;'>червоний</div>")
+    } else if (color === "black") {
+        document.write("<div style='background-color: black; color: white;'>чорний</div>")
     } else if (color === "blue" || color === "green") {
-        document.write("<div style='background-color: blue;'>синій</div>");
-        document.write("<div style='background-color: green;'>зелений</div>");
+        if (color === "blue") {
+            document.write("<div style='background-color: blue; color: white;'>синій</div>")
+        }
+        if (color === "green") {
+            document.write("<div style='background-color: green; color: white;'>зелений</div>")
+        }
     } else {
-        document.write("<div style='background-color: gray;'>Я не зрозумів</div>");
+        document.write("<div style='background-color: gray; color: white;'>Я не зрозумів</div>")
     }
 }
 
