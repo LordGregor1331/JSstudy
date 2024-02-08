@@ -308,7 +308,7 @@ function getSetForm(parent, getSet) {
         const isGet = getSetName.startsWith('get')
         const isSet = getSetName.startsWith('set')
         if (!isGet && !isSet) continue
-        const fieldName = getSetName.substring(3) //cut 'get' or 'set'
+        const fieldName = getSetName.substring(3)
         if (!inputs[fieldName]) {
             const input = document.createElement('input')
             input.placeholder = fieldName
@@ -323,17 +323,14 @@ function getSetForm(parent, getSet) {
         if (isSet) {
             inputs[fieldName].oninput = () => {
                 const setMethodName = 'set' + fieldName
-                const result = getSet[setMethodName](inputs[fieldName].value)
-                inputs[fieldName].value = result
+                const value = input.type === 'number' ? parseFloat(inputs[fieldName].value) : inputs[fieldName].value
+                const result = getSet[setMethodName](value)
+                if (result !== undefined) inputs[fieldName].value = result
                 updateInputs()
             }
-        }
-        else if (!getSet['set' + fieldName]) {
+        } else if (!getSet['set' + fieldName]) {
             inputs[fieldName].disabled = true
         }
     }
     updateInputs()
 }
-const div = document.createElement('div')
-document.body.appendChild(div)
-getSetForm(document.body, createPersonClosureDectract({ name: "Ганна", surname: "Іванова" }))
