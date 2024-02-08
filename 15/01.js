@@ -138,4 +138,61 @@
         .catch(() => console.log('respect за посидючість і уважність'))
 }
 
-//work in progress
+//promisify prompt
+
+function promptPromise(text) {
+    return new Promise((resolve, reject) => {
+        const input = prompt(text)
+        if (input !== null) {
+            resolve(input)
+        } else {
+            reject()
+        }
+    })
+}
+promptPromise("What is your name?")
+    .then(name => console.log(`Тебе звуть ${name}`),
+        () => console.log('Ну навіщо морозитися, нормально ж спілкувалися'))
+
+//promisify loginform
+
+function LoginForm(parent) { //Это логинформа из прошлого задания
+    const loginContainer = document.createElement('div');
+    parent.appendChild(loginContainer);
+    const usernameInput = document.createElement('input')
+    usernameInput.type = 'text'
+    loginContainer.appendChild(usernameInput)
+    const passwordInput = document.createElement('input')
+    passwordInput.type = 'password'
+    loginContainer.appendChild(passwordInput)
+    const loginButton = document.createElement('button')
+    loginButton.textContent = 'Login'
+    loginButton.disabled = true
+    loginContainer.appendChild(loginButton);
+    function checkLoginButton() {
+        loginButton.disabled = !(usernameInput.value.trim() && passwordInput.value.trim())
+    }
+    usernameInput.oninput = checkLoginButton
+    passwordInput.oninput = checkLoginButton
+    this.onLoginClick = function (callback) {
+        loginButton.addEventListener('click', () => callback())
+    }
+    this.getUsername = () => usernameInput.value
+    this.getPassword = () => passwordInput.value
+    this.setUsername = (value) => { usernameInput.value = value; checkLoginButton(); }
+    this.setPassword = (value) => { passwordInput.value = value; checkLoginButton(); }
+}
+
+function loginPromise(parent) {
+    return new Promise((resolve) => {
+        const form = new LoginForm(parent)
+        form.onLoginClick(() => {
+            const login = form.getUsername()
+            const password = form.getPassword()
+            resolve({ login, password })
+        })
+    })
+}
+loginPromise(document.body).then(({ login, password }) => {
+    console.log(`Ви ввели ${login} та ${password}`);
+})
