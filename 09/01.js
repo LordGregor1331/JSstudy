@@ -48,12 +48,9 @@
 
 //empty loop
 {
-    while (true) { 
-        let input = prompt("Type something")
-        if (input === null) {
-        } else {
-            break;
-        }
+    while (true) {
+        let result = prompt("Натисніть 'Скасувати' для продовження циклу.")
+        if (result !== null) break
     }
     console.log("finished")
 }
@@ -64,8 +61,8 @@
     if (!isNaN(N)) {
         let sum = 0
 
-    for (let i = 1; i <= N; i += 3) {
-        sum += i;
+        for (let i = 1; i <= N; i += 3) {
+            sum += i;
         }
         console.log(N, sum)
     }
@@ -73,12 +70,16 @@
 
 //chess one line
 {
-    let row = 5;
-    let str = ""
-    for (let i = 0; i < row; i++) {
-        str += "# "
+    let length = +prompt("type some numbers (1-9) etc.")
+    let result = ""
+    for (let i = 0; i < length; i++) {
+        if (i % 2 === 0) {
+            result += "#"
+        } else {
+            result += "."
+        }
     }
-    console.log(str)
+    console.log(result);
 }
 
 //numbers
@@ -138,34 +139,25 @@
 
 {
     function readArrayOfObjects() {
-        const arrayOfObjects = [];
-        let continueEntering = true;
-
+        const arrayOfObjects = []
+        let continueEntering = true
         while (continueEntering) {
-            const object = {};
-            let continueEnteringKeys = true;
-
-            while (continueEnteringKeys) {
-                const key = prompt("Type key:");
+            const object = {}
+            while (true) {
+                const key = prompt("Type key:")
                 if (key === null) {
-                    continueEnteringKeys = false;
-                    break;
+                    break
                 }
-
-                const value = prompt("Type value for key" + key + "':");
-                object[key] = value;
+                const value = prompt("Type value for key '" + key + "':")
+                object[key] = value
             }
-
-            arrayOfObjects.push(object);
-
-            continueEntering = confirm("Do you want to create one more object?");
+            arrayOfObjects.push(object)
+            continueEntering = confirm("Do you want to create one more object?")
         }
-
         return arrayOfObjects;
     }
-
-    const objectsArray = readArrayOfObjects();
-    console.log(objectsArray);
+    const objectsArray = readArrayOfObjects()
+    console.log(objectsArray)
 }
 
 //diamond
