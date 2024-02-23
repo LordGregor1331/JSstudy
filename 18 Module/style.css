@@ -1,0 +1,108 @@
+header {
+    height: fit-content;
+}
+#mainContainer {
+    display: flex;
+}
+#aside {
+    width: 30%;
+}
+#aside > a{
+    display: block;
+}
+header {
+    min-height: 100px;
+    background-color: #AAA;
+}
+#cartIcon {
+    display: flex;
+    flex-direction: row;
+}
+#cartIcon > img {
+    width: 50px;
+    height: 50px;
+    margin-left: 15px;
+}
+.modal { 
+    display: none; 
+    position: fixed;
+    z-index: 1; left: 0; top: 0; 
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+}
+.modal-content { 
+    background-color: white; 
+    margin: 15% auto; 
+    padding: 20px; 
+    border: 3px solid rgb(71, 70, 70); 
+    width: 30%; 
+    border-radius: 10px;
+    color: black;
+    box-shadow: 0 4px 16px #ccc;
+    letter-spacing: 1px;
+}
+.close { 
+    color: black;
+    float: right; 
+    font-size: 28px; 
+    font-weight: bold; 
+}
+.close:hover, .close:focus { 
+    color: wheat; text-decoration: none; cursor: pointer; 
+}
+.mainButtons {
+    width: 75px;
+    height: 40px;
+    border-radius: 10px;
+    margin: 15px 15px;
+    background-color: wheat;
+}
+.mainButtons:hover {
+    box-shadow: 0 15px 20px wheat;
+    transform: translateY(-7px);
+}
+.inputs {
+    border-radius: 10px;
+    width: 200px;
+    height: 40px;
+    margin-bottom: 10px;
+    border: none;
+    border-bottom: 1px solid rgb(219, 215, 215);
+}
+#confirmAuthBtn:hover {
+    transform: none !important;
+}
+#orderButton {
+    width: 75px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: wheat;
+    margin-bottom: 10px;
+}
+#orderButton:hover {
+    box-shadow: 0 15px 20px wheat;
+    transform: translateY(-7px);
+}
+#login {
+    font-size: 24px;
+    margin-left: 15px;
+}
+.confirmButtons {
+    display: none;
+}
+.confirmButtons {
+    width: 75px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: wheat;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-right: 10px
+}
+.confirmButtons:hover {
+    box-shadow: 0 15px 20px wheat;
+    transform: translateY(-7px);
+}

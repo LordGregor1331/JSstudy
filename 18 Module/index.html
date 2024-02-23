@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>GQL</title>
+        <meta charset='utf8' />
+        <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+        <header>
+            <div id='cartIcon'>
+                <img src="./free-icon-shopping-cart-5087784.png" alt="">
+                <button class="confirmButtons" id="checkOrder">Check order</button>
+                <button class="confirmButtons" id="confirmOrder">Confirm order</button>
+                <button class="confirmButtons" id="orderHistory">Orders history</button>
+            </div>
+            <div id="login"></div>
+            <div id='authButtons'>
+                <button id='registerBtn' class="mainButtons">Register</button>
+                <button id='signInBtn' class="mainButtons">Sign In</button>
+                <button id='logoutBtn' class="mainButtons">Logout</button>
+            </div>
+        </header>
+        <div id="authModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="modalTitle">Register</h2>
+                <input type="text" id="loginInput" class="inputs" placeholder="Login">
+                <input type="password" id="passwordInput" class="inputs" placeholder="Password">
+                <button id="confirmAuthBtn" class="mainButtons">Confirm</button>
+            </div>
+        </div>
+        <div id='mainContainer'>
+            <aside id='aside'>
+            </aside>
+            <main id='main'>
+            </main>
+        </div>
+        <script src="./script.js"></script>
+    </body>
+</html>
