@@ -504,11 +504,37 @@ const actionFullOrder = () => async (dispatch, getState) => {
 
 const actionOrderFind = (_id) => actionPromise('orderFind', gqlOrderFind(_id))
 
-const actionOrderFindAll = () => async dispatch => {
-    const query = JSON.stringify([{}])
-    await dispatch(actionPromise('orderFind', gqlOrderFind(query)))
+const actionOrderFindAll = (_id) => async (dispatch) => {
+    try {
+        const goodDetails = await dispatch(actionPromise('orderFindAll', gqlOrderFind(_id)))
+        dispatch({
+            type: 'ORDER_FIND',
+            good: {
+                _id,
+                name: goodDetails.name,
+                price: goodDetails.price
+            }
+        })
+    } catch (error) {
+        console.error("Failed to fetch orders:", error)
+    }
 }
-const actionCartAdd = (_id, count = 1) => ({ type: 'CART_ADD', count, good: {_id} });
+const actionCartAdd = (_id, count = 1) => async (dispatch) => {
+    try {
+        const goodDetails = await dispatch(actionPromise('goodDetails', gqlGoodById(_id)))
+        dispatch({
+            type: 'CART_ADD',
+            count,
+            good: {
+                _id,
+                name: goodDetails.name,
+                price: goodDetails.price
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 const actionCartSub = (_id, count = 1) => ({ type: 'CART_SUB', count, good: {_id} })
 
@@ -556,9 +582,11 @@ window.onhashchange = () => {
 
 document.getElementById('registerBtn').onclick = function() {
     showModal('Register')
+    window.location.hash = 'login'
 }
 document.getElementById('signInBtn').onclick = function() {
     showModal('Sign In')
+    window.location.hash = 'login'
 }
 document.getElementById('logoutBtn').onclick = function() {
     store.dispatch(actionAuthLogout())
@@ -595,9 +623,26 @@ document.getElementById('cartIcon').addEventListener('click', function() {
     });
 });
 document.getElementById('checkOrder').addEventListener('click', function() {
-    console.log(store.getState().cart);
-});
-
+    const modal = document.getElementById('orderDetailsModal');
+    const detailsContainer = document.getElementById('orderDetails');
+    const { cart } = store.getState()
+    detailsContainer.innerHTML = ''
+    Object.values(cart).forEach(({ count, good}) => {
+        const detailElement = document.createElement('div')
+        detailElement.innerText = `${good.name} - Price: ${good.price} - Count: ${count}`
+        detailsContainer.appendChild(detailElement)
+    })
+    modal.style.display = 'block'
+})
+document.querySelector('#orderDetailsModal .close').addEventListener('click', function() {
+    document.getElementById('orderDetailsModal').style.display = 'none'
+})
+window.onclick = function(event) {
+    const modal = document.getElementById('orderDetailsModal')
+    if (event.target === modal) {
+        modal.style.display = 'none'
+    }
+}
 document.getElementById('confirmOrder').addEventListener('click', async function() {
     try {
         await store.dispatch(actionFullOrder())
@@ -608,10 +653,27 @@ document.getElementById('confirmOrder').addEventListener('click', async function
     }
 })
 document.getElementById('orderHistory').addEventListener('click', async function() {
-    try {
-        await store.dispatch(actionOrderFind())
-    } catch (error) {
-        console.log('No orders history')
+    await store.dispatch(actionOrderFindAll());
+    const modal = document.getElementById('ordersHistoryModal')
+    const detailsContainer = document.getElementById('ordersHistoryDetails')
+    const { promise: { orderFindAll: { payload: orders } = {} } } = store.getState()
+    detailsContainer.innerHTML = '';
+    (orders || []).forEach(order => {
+        order.orderGoods.forEach(({ count, goodName, price }) => {
+            const detailElement = document.createElement('div')
+            detailElement.innerText = `${goodName}, price: ${price}, count: ${count}`
+            detailsContainer.appendChild(detailElement)
+        });
+    });
+    modal.style.display = 'block'
+});
+document.querySelector('#ordersHistoryModal .close').onclick = () => {
+    document.getElementById('ordersHistoryModal').style.display = 'none'
+}
+
+window.onclick = (event) => {
+    if (event.target == document.getElementById('ordersHistoryModal')) {
+        document.getElementById('ordersHistoryModal').style.display = 'none'
     }
-})
+};
 window.onhashchange()
