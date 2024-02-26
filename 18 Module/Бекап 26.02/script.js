@@ -69,6 +69,18 @@ const initialState = {
     token: localStorage.getItem('authToken'),
     payload: null
 }
+// function gql(url, query, variables={}) {
+//     return fetch(url, {
+//         method: "POST",
+//         headers: {
+//             'Content-Type': 'application/json',
+//             Accept: 'application/json'
+//         },
+//         body: JSON.stringify({query, variables}) 
+//     })
+//     .then(res => res.json())
+    
+// }
 function getGQL (url) {
     function gql(query, variables = {}) {
         return fetch(url, {
@@ -166,6 +178,7 @@ const reducers = {
     promise: promiseReducer,
     auth: localStoredReducer(authReducer, 'auth'),
     cart: localStoredReducer(cartReducer, 'cart')
+    //cart: cartReducer,     //часть предыдущего ДЗ
 }
 
 const totalReducer = combineReducers(reducers) 
@@ -286,6 +299,14 @@ store.subscribe(() => {
         for (const {url} of images || [] ) {
             main.innerHTML += `<div><img style= "max-width:20vw" src="http://shop-roles.node.ed.asmer.org.ua/${url}"></div>`
         }
+        // const {title, opening_crawl, characters} = payload
+        // main.innerHTML = `<h1>${title}</h1>
+        //                  <p>${opening_crawl}</p>
+        //                  `
+        // for (const peopleUrl of characters){
+        //     const peopleId = peopleUrl.split('/people/')[1].slice(0,-1)
+        //     main.innerHTML += `<a href="#/people/${peopleId}">Герой №${peopleId}</a>`
+        // }
     }
 })
 store.subscribe(() => {
@@ -298,39 +319,9 @@ store.subscribe(() => {
     }
 })
 
-store.subscribe(() => { //order increase + 1 and order decrease -1 and delete
-    const { cart } = store.getState();
-    const detailsContainer = document.getElementById('orderDetails')
-    detailsContainer.innerHTML = '';
-    Object.entries(cart).forEach(([id, { count, good }]) => {
-        const detailElement = document.createElement('div')
-        detailElement.innerText = `${good.name}, Price: ${good.price}, Count: ${count}, Total: ${count * good.price}`
-        const increaseButton = document.createElement('button')
-        increaseButton.innerText = '+'
-        increaseButton.addEventListener('click', () => {
-            store.dispatch(actionCartSet(id, count + 1))
-        })
-        const decreaseButton = document.createElement('button')
-        decreaseButton.innerText = '-'
-        decreaseButton.addEventListener('click', () => {
-            if (count > 1) {
-                store.dispatch(actionCartSub(id, 1))
-            } else {
-                store.dispatch(actionCartDel(id))
-            }
-        })
-        const deleteButton = document.createElement('button')
-        deleteButton.innerHTML = '🗑️'
-        deleteButton.addEventListener('click', () => store.dispatch(actionCartDel(id)))
-        detailElement.appendChild(increaseButton)
-        detailElement.appendChild(decreaseButton)
-        detailElement.appendChild(deleteButton)
-        detailsContainer.appendChild(detailElement)
-    })
-})
-
 const gqlRootCats = () =>
 gql(
+    //"http://shop-roles.node.ed.asmer.org.ua/graphql",
     `
     query roots{
         CategoryFind(query: "[{\\"parent\\": null}]") {
@@ -341,6 +332,7 @@ gql(
 `)
 const gqlOrderFind = (_id) =>
 gql(
+    //http://shop-roles.node.ed.asmer.org.ua/graphql
     `
     query orderFind($ql: String) {
         OrderFind(query: $ql) {
@@ -558,33 +550,11 @@ const actionCartAdd = (_id, count = 1) => async (dispatch) => {
     }
 }
 
-const actionCartSub = (_id) => (dispatch, getState) => {
-    const { cart } = getState()
-    const currentItem = cart[_id]
-    if (currentItem && currentItem.count > 1) {
-        dispatch({ type: 'CART_SUB', count: 1, good: { _id } })
-    } else {
-        dispatch({ type: 'CART_DEL', good: { _id } })
-    }
-}
+const actionCartSub = (_id, count = 1) => ({ type: 'CART_SUB', count, good: {_id} })
 
 const actionCartDel = (_id) => ({ type: 'CART_DEL', good: {_id} })
 
-const actionCartSet = (_id, count = 1) => (dispatch, getState) => {
-    const { cart } = getState()
-    const good = cart[_id]?.good
-    if (good) {
-        dispatch({
-            type: 'CART_SET',
-            count,
-            good: {
-                _id: good._id, 
-                name: good.name, 
-                price: good.price 
-            }
-        })
-    }
-}
+const actionCartSet = (_id, count = 1) => ({ type: 'CART_SET', count, good: {_id} });
 
 const actionCartClear = () => ({ type: 'CART_CLEAR' })
 
@@ -595,6 +565,10 @@ window.onhashchange = () => {
     const [,route, _id] = location.hash.split('/')
 
     const routes = {
+        people(){
+            console.log('People', _id)
+            store.dispatch(actionGetPeople(_id))
+        },
         history() {
             store.dispatch(actionOrderFindAll)
         },
@@ -607,11 +581,12 @@ window.onhashchange = () => {
             store.dispatch(actionGoodById(_id))
         },
         login(){
-            showModal('Sign In')
+            console.log('А ТУТ ЩА ДОЛЖНА БЫТЬ ФОРМА ЛОГИНА')
+            //нарисовать форму логина, которая по нажатию кнопки Login делает store.dispatch(actionFullLogin(login, password))
         },
-        register(){
-            showModal('Register')
-        },
+        //register(){
+            ////нарисовать форму регистрации, которая по нажатию кнопки Login делает store.dispatch(actionFullRegister(login, password))
+        //},
     }
 
     if (route in routes){
@@ -661,33 +636,15 @@ document.getElementById('cartIcon').addEventListener('click', function() {
         button.style.display = button.style.display === 'none' ? 'block' : 'none';
     });
 });
-document.getElementById('checkOrder').addEventListener('click', function () {
-    const modal = document.getElementById('orderDetailsModal')
-    const detailsContainer = document.getElementById('orderDetails')
+document.getElementById('checkOrder').addEventListener('click', function() {
+    const modal = document.getElementById('orderDetailsModal');
+    const detailsContainer = document.getElementById('orderDetails');
     const { cart } = store.getState()
-    detailsContainer.innerHTML = '';
-    Object.keys(cart).forEach(key => {
-        const item = cart[key]
-        const detailElement = document.createElement('div');
-        detailElement.id = 'orderDetailsElement'
-        detailElement.innerText = `${item.good.name}, Price: ${item.good.price}, Count: ${item.count}, total: ${item.good.price * item.count}  `
-        const increaseButton = document.createElement('button')
-        increaseButton.textContent = '+'
-        increaseButton.onclick = () => {
-            store.dispatch(actionCartSet(key, item.count + 1))
-        }
-        const decreaseButton = document.createElement('button')
-        decreaseButton.textContent = '-'
-        decreaseButton.onclick = () => {
-            store.dispatch(actionCartSub(key, item.count - 1))
-        }
-        const deleteButton = document.createElement('button')
-        deleteButton.textContent = '🗑️'
-        deleteButton.addEventListener('click', () => store.dispatch(actionCartDel(key)))
+    detailsContainer.innerHTML = ''
+    Object.values(cart).forEach(({ count, good}) => {
+        const detailElement = document.createElement('div')
+        detailElement.innerText = `${good.name}, price: ${good.price} count: ${count}`
         detailsContainer.appendChild(detailElement)
-        detailsContainer.appendChild(increaseButton)
-        detailsContainer.appendChild(decreaseButton)
-        detailsContainer.appendChild(deleteButton)
     })
     modal.style.display = 'block'
 })

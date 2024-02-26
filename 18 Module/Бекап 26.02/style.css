@@ -112,8 +112,3 @@ header {
     box-shadow: 0 15px 20px whitesmoke;
     transform: translateY(-7px);
 }
-#orderDetailsElement {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
