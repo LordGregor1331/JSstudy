@@ -106,7 +106,8 @@ header {
     background-color: whitesmoke;
     margin-bottom: 10px;
     margin-top: 10px;
-    margin-right: 10px
+    margin-right: 10px;
+    margin-left: 10px
 }
 .confirmButtons:hover {
     box-shadow: 0 15px 20px whitesmoke;
@@ -116,4 +117,21 @@ header {
     display: flex;
     flex-direction: row;
     width: 100%;
+}
+#ordersHistoryDetails h3 {
+    margin-top: 20px;
+}
+
+#ordersHistoryDetails div {
+    background-color: #f9f9f9; /* Цвет фона для каждого товара */
+    padding: 10px; /* Внутренние отступы */
+    border-radius: 5px; /* Скругление углов */
+    margin-bottom: 10px; /* Отступ снизу */
+}
+
+#ordersHistoryDetails hr {
+    border: none;
+    height: 2px;
+    background-color: #ccc;
+    margin: 20px 0; /* Отступы сверху и снизу разделителя */
 }

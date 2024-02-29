@@ -232,14 +232,8 @@ const CategoryFindOne = () => {
             <a href = "#/good/${_id}">${name}</a>
             <div><img style= "max-width:50vw" src="http://shop-roles.node.ed.asmer.org.ua/${images && images[0] && images[0].url}"></div>
             <p>Цена: ${price}</p>
-            <button id="orderButton-${_id}" class = "mainButtons" data-id="${_id}">Order</button>
             </div>`
             main.innerHTML += goodHTML
-        })
-        goods.forEach(({_id}) => {
-            document.getElementById(`orderButton-${_id}`).addEventListener('click', function() {
-                store.dispatch(actionCartAdd(_id, 1))
-            })
         })
     }
 }
@@ -269,23 +263,29 @@ store.subscribe(() => {
     login.innerHTML = ("token" in store.getState().auth ? store.getState().auth.payload.sub.login : "Guest")
 })
 store.subscribe(() => {
-    const [,route] = location.hash.split('/')
-    if (route !== 'good') return
+    const [,route] = location.hash.split('/');
+    if (route !== 'good') return;
 
     const {status, payload, error} = store.getState().promise.goodById || {}
-    if (status === 'PENDING'){
-        main.innerHTML = `<img src='https://cdn.dribbble.com/users/63485/screenshots/1309731/infinite-gif-preloader.gif' />`
-    }
     if (status === 'FULFILLED'){
         const {name, price, _id, description, images} = payload
         main.innerHTML = `
-        <h3>${name}</h3>
-        <p>${description}</p>
-        <p>${price}</p>
+            <h3>${name}</h3>
+            <p>${description}</p>
+            <p>${price}</p>
+            <button id="orderButtonInside-${_id}" class="mainButtons">Order</button>
         `
-        for (const {url} of images || [] ) {
-            main.innerHTML += `<div><img style= "max-width:20vw" src="http://shop-roles.node.ed.asmer.org.ua/${url}"></div>`
-        }
+        images.forEach(({url}) => {
+            main.innerHTML += `<div><img style="max-width:20vw" src="http://shop-roles.node.ed.asmer.org.ua/${url}"></div>`
+        })
+        const orderButtonInside = document.getElementById(`orderButtonInside-${_id}`)
+        orderButtonInside.addEventListener('click', function() {
+            store.dispatch(actionCartAdd(_id, 1))
+            const messageContainer = document.getElementById('messageContainer')
+            messageContainer.innerText = "Good added to the cart. Check the cart, please"
+            messageContainer.style.display = 'block'
+            setTimeout(() => { messageContainer.style.display = 'none'; }, 5000)
+        })
     }
 })
 store.subscribe(() => {
@@ -320,7 +320,7 @@ store.subscribe(() => { //order increase + 1 and order decrease -1 and delete
             }
         })
         const deleteButton = document.createElement('button')
-        deleteButton.innerHTML = '🗑️'
+        deleteButton.innerHTML = '🗑️' //эмодзи корзины)
         deleteButton.addEventListener('click', () => store.dispatch(actionCartDel(id)))
         detailElement.appendChild(increaseButton)
         detailElement.appendChild(decreaseButton)
@@ -328,7 +328,6 @@ store.subscribe(() => { //order increase + 1 and order decrease -1 and delete
         detailsContainer.appendChild(detailElement)
     })
 })
-
 const gqlRootCats = () =>
 gql(
     `
@@ -349,7 +348,6 @@ gql(
             createdAt
             orderGoods{
                 _id
-                createdAt
                 price
                 count
                 goodName
@@ -357,7 +355,6 @@ gql(
             }
             owner {
                 _id
-                createdAt
                 login
                 nick
             }
@@ -371,7 +368,6 @@ gql(
 )
 const gqlCategoryById = (_id) => 
 gql(
-    //"http://shop-roles.node.ed.asmer.org.ua/graphql",
     `
     query roots1($q1: String) {
     CategoryFindOne(query: $q1) {
@@ -510,37 +506,38 @@ const actionFullLogin = (login, password) => async dispatch => {
 const actionFullOrder = () => async (dispatch, getState) => {
     const { cart } = getState()
     const orderGoods = Object.keys(cart).map(key => ({
-        good: { _id:key },
-        count: cart[key].count
+        good: { _id: key },
+        count: cart[key].count,
     }))
     try {
-        const result = await (actionPromise('orderUpsert', gqlOrderUpsert(orderGoods)))
+        const result = await actionPromise('orderUpsert', gqlOrderUpsert(orderGoods))
         if (result && result._id) {
-            console.log('order placed successfuly:', result.gqlOrderUpsert)
-            dispatch(actionCartClear())
+            console.log('Order placed successfully:', result)
         }
     } catch (error) {
         console.error('Order placement failed:', error)
+    } finally {
+        dispatch(actionCartClear())
     }
 }
 
 const actionOrderFind = (_id) => actionPromise('orderFind', gqlOrderFind(_id))
 
-const actionOrderFindAll = (_id) => async (dispatch) => {
+const actionOrderFindAll = () => async (dispatch) => {
     try {
-        const goodDetails = await dispatch(actionPromise('orderFindAll', gqlOrderFind(_id)))
+        const orders = await dispatch(actionPromise('orderFindAll', gqlOrderFind()))
         dispatch({
-            type: 'ORDER_FIND',
-            good: {
-                _id,
-                name: goodDetails.name,
-                price: goodDetails.price
-            }
-        })
+            type: 'ORDERS_FIND_ALL_SUCCESS',
+            payload: orders 
+        });
     } catch (error) {
         console.error("Failed to fetch orders:", error)
+        dispatch({
+            type: 'ORDERS_FIND_ALL_FAIL',
+            error: error
+        })
     }
-}
+};
 const actionCartAdd = (_id, count = 1) => async (dispatch) => {
     try {
         const goodDetails = await dispatch(actionPromise('goodDetails', gqlGoodById(_id)))
@@ -682,7 +679,7 @@ document.getElementById('checkOrder').addEventListener('click', function () {
             store.dispatch(actionCartSub(key, item.count - 1))
         }
         const deleteButton = document.createElement('button')
-        deleteButton.textContent = '🗑️'
+        deleteButton.textContent = '🗑️' //эмодзи корзины)
         deleteButton.addEventListener('click', () => store.dispatch(actionCartDel(key)))
         detailsContainer.appendChild(detailElement)
         detailsContainer.appendChild(increaseButton)
@@ -707,7 +704,6 @@ document.getElementById('confirmOrder').addEventListener('click', async function
     try {
         await store.dispatch(actionFullOrder())
         console.log("Order has confirmed")
-        store.dispatch(actionCartClear())
     } catch (error) {
         console.error("Order confirmation failed:", error)
     }
@@ -721,19 +717,29 @@ document.getElementById('clearButton').addEventListener('click', function () {
         console.error(error)
     }
 })
-
 document.getElementById('orderHistory').addEventListener('click', async function() {
-    await store.dispatch(actionOrderFindAll());
+    await store.dispatch(actionOrderFindAll())
     const modal = document.getElementById('ordersHistoryModal')
     const detailsContainer = document.getElementById('ordersHistoryDetails')
     const { promise: { orderFindAll: { payload: orders } = {} } } = store.getState()
     detailsContainer.innerHTML = '';
-    (orders || []).forEach(order => {
-        order.orderGoods.forEach(({ count, goodName, price, total }) => {
-            const detailElement = document.createElement('div')
-            detailElement.innerText = `${goodName}, price: ${price}, count: ${count}, total: ${total}`
-            detailsContainer.appendChild(detailElement)
+    const sortedOrders = (orders || []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    sortedOrders.forEach(order => {
+        const orderDate = new Date(parseInt(order.createdAt, 10)).toLocaleDateString("en-US", {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZoneName: 'short'
         })
+        const orderElement = document.createElement('div')
+        orderElement.innerHTML = `<h4>Order date: ${orderDate}</h4>`
+        order.orderGoods.forEach(({ count, goodName, price, total }) => {
+            orderElement.innerHTML += `<p>${goodName}, price: ${price}, count: ${count}, total: ${total}</p>`;
+        })
+        detailsContainer.appendChild(orderElement)
     })
     modal.style.display = 'block'
 })

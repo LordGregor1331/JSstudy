@@ -1,5 +1,5 @@
-const authReducer = (state = {}, action) => {
-    const { type, token } = action
+const authReducer = (state = {}, action) => {  
+    const{type, token} = action
     if (type === "AUTH_LOGIN") {
         const payload = jwtDecode(token)
         if (payload) {
@@ -29,37 +29,37 @@ function jwtDecode(token) {
 
 const cartReducer = (state = {}, action) => {
     const handlers = {
-        'CARD_ADD': () => {
-            const { _id, ...goodDetails } = action.good
-            const count = state[_id] ? state[_id].count + action.count : action.count
-            return { ...state, [_id]: { count, good: { _id, ...goodDetails } } }
-        },
-        'CART_SUB': () => {
-            const { _id } = action.good
-            if (!state[_id]) return state
-            const count = state[_id].count - action.count
-            if (count > 0) {
-                return { ...state, [_id]: { ...state[_id], count } }
-            } else {
-                const { [_id]: removed, ...newState } = state
-                return newState
-            }
-        },
-        'CARD_DEL': () => {
-            const { _id } = action.good
-            const { [_id]: removed, ...newState } = state
-            return newState
-        },
-        'CART_SET': () => {
-            const { _id, ...goodDetails } = action.good
-            if (action.count > 0) {
-                return { ...state, [_id]: { count: action.count, good: { _id, ...goodDetails } } }
-            } else {
-                const { [_id]: removed, ...newState } = state
-                return newState;
-            }
-        },
-        'CART_CLEAR': () => ({})
+      'CARD_ADD': () => {
+        const { _id, ...goodDetails } = action.good
+        const count = state[_id] ? state[_id].count + action.count : action.count
+        return { ...state, [_id]: { count, good: { _id, ...goodDetails } } }
+      },
+      'CART_SUB': () => {
+        const { _id } = action.good
+        if (!state[_id]) return state
+        const count = state[_id].count - action.count
+        if (count > 0) {
+          return { ...state, [_id]: { ...state[_id], count } }
+        } else {
+          const { [_id]: removed, ...newState } = state
+          return newState
+        }
+      },
+      'CARD_DEL': () => {
+        const { _id } = action.good
+        const { [_id]: removed, ...newState } = state
+        return newState
+      },
+      'CART_SET': () => {
+        const { _id, ...goodDetails } = action.good
+        if (action.count > 0) {
+          return { ...state, [_id]: { count: action.count, good: { _id, ...goodDetails } } }
+        } else {
+          const { [_id]: removed, ...newState } = state
+          return newState;
+        }
+      },
+      'CART_CLEAR': () => ({})
     }
     return handlers[action.type] ? handlers[action.type]() : state
 }
@@ -74,9 +74,9 @@ const cartReducer = (state = {}, action) => {
 //         body: JSON.stringify({query, variables}) 
 //     })
 //     .then(res => res.json())
-
+    
 // }
-function getGQL(url) {
+function getGQL (url) {
     function gql(query, variables = {}) {
         return fetch(url, {
             method: "POST",
@@ -84,41 +84,41 @@ function getGQL(url) {
                 "Content-type": "application/json",
                 Accept: "application/json"
             },
-            body: JSON.stringify({ query, variables })
+            body: JSON.stringify({query, variables})
         })
-            .then(res => res.json())
-            .then(r => {
-                if (r.data) {
-                    const result = Object.values(r.data)[0]
-                    console.log(result)
-                    return result
-                }
-                throw new Error(r.data.errors[0].message)
-            })
-    }
+        .then(res => res.json())
+        .then(r => {
+            if (r.data) {
+                const result = Object.values(r.data)[0]
+                console.log(result)
+                return result
+            }
+            throw new Error (r.data.errors[0].message)
+        })
+    } 
     return gql
 }
 const gql = getGQL("http://shop-roles.node.ed.asmer.org.ua/graphql")
 
-function createStore(reducer) {
-    let state = reducer(undefined, {}) //стартовая инициализация состояния, запуск редьюсера со state === undefined
-    let cbs = []                     //массив подписчиков
-
-    const getState = () => state            //функция, возвращающая переменную из замыкания
+function createStore(reducer){
+    let state       = reducer(undefined, {}) //стартовая инициализация состояния, запуск редьюсера со state === undefined
+    let cbs         = []                     //массив подписчиков
+    
+    const getState  = () => state            //функция, возвращающая переменную из замыкания
     const subscribe = cb => (cbs.push(cb),   //запоминаем подписчиков в массиве
-        () => cbs = cbs.filter(c => c !== cb)) //возвращаем функцию unsubscribe, которая удаляет подписчика из списка
-
-    const dispatch = action => {
-        if (typeof action === 'function') { //если action - не объект, а функция
+                             () => cbs = cbs.filter(c => c !== cb)) //возвращаем функцию unsubscribe, которая удаляет подписчика из списка
+                             
+    const dispatch  = action => { 
+        if (typeof action === 'function'){ //если action - не объект, а функция
             return action(dispatch, getState) //запускаем эту функцию и даем ей dispatch и getState для работы
         }
         const newState = reducer(state, action) //пробуем запустить редьюсер
-        if (newState !== state) { //проверяем, смог ли редьюсер обработать action
+        if (newState !== state){ //проверяем, смог ли редьюсер обработать action
             state = newState //если смог, то обновляем state 
-            for (let cb of cbs) cb(state) //и запускаем подписчиков
+            for (let cb of cbs)  cb(state) //и запускаем подписчиков
         }
     }
-
+    
     return {
         getState, //добавление функции getState в результирующий объект
         dispatch,
@@ -147,20 +147,20 @@ function localStoredReducer(originalReducer, localStorageKey) {
         console.log(newState)
         return newState
     }
-
+    
     return wrapper;
 }
-function combineReducers(reducers) {
-    function totalReducer(state = {}, action) {
+function combineReducers(reducers){
+    function totalReducer(state={}, action){
         const newTotalState = {}
-        for (const [reducerName, reducer] of Object.entries(reducers)) {
+        for (const [reducerName, reducer] of Object.entries(reducers)){
             const newSubState = reducer(state[reducerName], action)
-            if (newSubState !== state[reducerName]) {
+            if (newSubState !== state[reducerName]){
                 newTotalState[reducerName] = newSubState
             }
         }
-        if (Object.keys(newTotalState).length) {
-            return { ...state, ...newTotalState }
+        if (Object.keys(newTotalState).length){
+            return {...state, ...newTotalState}
         }
         return state
     }
@@ -175,13 +175,13 @@ const reducers = {
     //cart: cartReducer,     //часть предыдущего ДЗ
 }
 
-const totalReducer = combineReducers(reducers)
+const totalReducer = combineReducers(reducers) 
 
-function promiseReducer(state = {}, action) {
-    const { namePromise, type, status, payload, error } = action
-    if (type === 'PROMISE') {
+function promiseReducer(state={}, action){
+    const {namePromise, type, status, payload, error} = action
+    if (type === 'PROMISE'){
         return {
-            ...state,
+            ... state,
             [namePromise]: {
                 type,
                 status,
@@ -194,9 +194,9 @@ function promiseReducer(state = {}, action) {
     return state
 }
 
-const actionPending = namePromise => ({ namePromise, type: 'PROMISE', status: 'PENDING' })
-const actionFulfilled = (namePromise, payload) => ({ namePromise, type: 'PROMISE', status: 'FULFILLED', payload })
-const actionRejected = (namePromise, error) => ({ namePromise, type: 'PROMISE', status: 'REJECTED', error })
+const actionPending = namePromise => ({namePromise, type: 'PROMISE', status: 'PENDING'})
+const actionFulfilled = (namePromise ,payload) => ({namePromise, type: 'PROMISE', status: 'FULFILLED', payload})
+const actionRejected = (namePromise ,error) => ({namePromise, type: 'PROMISE', status: 'REJECTED',  error})
 
 const actionPromise = (namePromise, promise) => async dispatch => {
     dispatch(actionPending(namePromise));
@@ -205,7 +205,7 @@ const actionPromise = (namePromise, promise) => async dispatch => {
         const payload = await promise;
         console.log("Payload received:", payload)
         dispatch(actionFulfilled(namePromise, payload))
-    } catch (error) {
+    } catch(error) {
         console.error("Promise action error:", error)
         dispatch(actionRejected(namePromise, error))
     }
@@ -214,18 +214,18 @@ const actionPromise = (namePromise, promise) => async dispatch => {
 const store = createStore(totalReducer) //не забудьте combineReducers если он у вас уже есть
 store.subscribe(() => console.log(store.getState()))
 
-const CategoryFindOne = () => {
-    const [, route] = location.hash.split('/')
+const CategoryFindOne = () => {    
+    const [,route] = location.hash.split('/')
     if (route !== 'category') return
 
-    const { status, payload, error } = store.getState().promise.categoryById || {}
-    if (status === 'PENDING') {
+    const {status, payload, error} = store.getState().promise.categoryById || {}
+    if (status === 'PENDING'){
         main.innerHTML = `<img src='https://cdn.dribbble.com/users/63485/screenshots/1309731/infinite-gif-preloader.gif' />`
     }
-    if (status === 'FULFILLED') {
-        const { name, goods } = payload
+    if (status === 'FULFILLED'){
+        const {name, goods} = payload
         main.innerHTML = `<h1>${name}</h1>`
-        for (const { _id, name, price, images } of goods) {
+        for (const {_id, name, price, images} of goods) {
             main.innerHTML += `<div>
             <a href = "#/good/${_id}">${name}</a>
             <div><img style= "max-width:50vw" src="http://shop-roles.node.ed.asmer.org.ua/${images && images[0] && images[0].url}"></div>
@@ -247,21 +247,21 @@ const CategoryFindOne = () => {
 store.subscribe(CategoryFindOne)
 
 store.subscribe(() => {
-    const [, route] = location.hash.split('/')
+    const [,route] = location.hash.split('/')
     if (route !== 'good') return
 
-    const { status, payload, error } = store.getState().promise.goodById || {}
-    if (status === 'PENDING') {
+    const {status, payload, error} = store.getState().promise.goodById || {}
+    if (status === 'PENDING'){
         main.innerHTML = `<img src='https://cdn.dribbble.com/users/63485/screenshots/1309731/infinite-gif-preloader.gif' />`
     }
-    if (status === 'FULFILLED') {
-        const { name, price, _id, description, images } = payload
+    if (status === 'FULFILLED'){
+        const {name, price, _id, description, images} = payload
         main.innerHTML = `
         <h3>${name}</h3>
         <p>${description}</p>
         <p>${price}</p>
         `
-        for (const { url } of images || []) {
+        for (const {url} of images || [] ) {
             main.innerHTML += `<div><img style= "max-width:20vw" src="http://shop-roles.node.ed.asmer.org.ua/${url}"></div>`
         }
         // const {title, opening_crawl, characters} = payload
@@ -275,19 +275,19 @@ store.subscribe(() => {
     }
 })
 store.subscribe(() => {
-    const { status, payload, error } = store.getState().promise.rootCats || {}
-    if (status === 'FULFILLED' && payload) {
+    const {status, payload, error} = store.getState().promise.rootCats || {}
+    if (status === 'FULFILLED' && payload){
         aside.innerHTML = ''
-        for (const { _id, name } of payload) {
+        for (const { _id, name} of payload){
             aside.innerHTML += `<a href="#/category/${_id}">${name}</a>`
         }
     }
 })
 
 const gqlRootCats = () =>
-    gql(
-        //"http://shop-roles.node.ed.asmer.org.ua/graphql",
-        `
+gql(
+    //"http://shop-roles.node.ed.asmer.org.ua/graphql",
+    `
     query roots{
         CategoryFind(query: "[{\\"parent\\": null}]") {
             _id
@@ -296,9 +296,9 @@ const gqlRootCats = () =>
     }
 `)
 const gqlOrderFind = (_id) =>
-    gql(
-        //http://shop-roles.node.ed.asmer.org.ua/graphql
-        `
+gql(
+    //http://shop-roles.node.ed.asmer.org.ua/graphql
+    `
     query orderFind($ql: String) {
         OrderFind(query: $ql) {
             _id
@@ -321,15 +321,15 @@ const gqlOrderFind = (_id) =>
         }
     }
     `,
-        {
-            "ql": JSON.stringify([{ _id }])
-        }
+    {
+        "ql": JSON.stringify([{_id}])
+    }
 
-    )
-const gqlCategoryById = (_id) =>
-    gql(
-        //"http://shop-roles.node.ed.asmer.org.ua/graphql",
-        `
+)
+const gqlCategoryById = (_id) => 
+gql(
+    //"http://shop-roles.node.ed.asmer.org.ua/graphql",
+    `
     query roots1($q1: String) {
     CategoryFindOne(query: $q1) {
       _id
@@ -354,12 +354,12 @@ const gqlCategoryById = (_id) =>
     }
   }
 `,
-        { q1: JSON.stringify([{ _id }]) }
-    )
+{q1: JSON.stringify([{_id}])}
+)
 const gqlFullRegister = (login, password) =>
-    gql(
-        //"http://shop-roles.node.ed.asmer.org.ua/graphql",
-        `
+gql(
+    //"http://shop-roles.node.ed.asmer.org.ua/graphql",
+    `
     mutation fullRegister($login: String!, $password: String!) {
         UserUpsert(user: {login: $login, password: $password}) {
             _id
@@ -367,28 +367,28 @@ const gqlFullRegister = (login, password) =>
         }
     }
     `,
-        {
-            login,
-            password
-        }
-    )
+    {
+        login, 
+        password
+    }
+)
 const gqlFullLogin = (login, password) =>
-    gql(
-        //"http://shop-roles.node.ed.asmer.org.ua/graphql",
-        `
+gql(
+    //"http://shop-roles.node.ed.asmer.org.ua/graphql",
+    `
     query fullLogin($login: String, $password: String) {
         login (login: $login, password: $password)
     }
     `,
-        {
-            "login": login,
-            "password": password
-        }
-    )
-const gqlGoodById = (_id) =>
-    gql(
-        //"http://shop-roles.node.ed.asmer.org.ua/graphql",
-        `
+    {
+        "login": login, 
+        "password": password 
+    }
+)
+const gqlGoodById = (_id) => 
+gql(
+    //"http://shop-roles.node.ed.asmer.org.ua/graphql",
+    `
     query roots1($q1: String) {
     GoodFindOne(query: $q1) {
         _id
@@ -411,8 +411,8 @@ const gqlGoodById = (_id) =>
     }
   }
 `,
-        { q1: JSON.stringify([{ _id }]) }
-    )
+{q1: JSON.stringify([{_id}])}
+)
 
 const actionRootCats = () =>
     actionPromise('rootCats', gqlRootCats())
@@ -425,7 +425,7 @@ const actionCategoryById = (_id) =>
 const actionGoodById = (_id) =>
     actionPromise('goodById', gqlGoodById(_id))
 
-const actionFullRegister = (login, password) => actionPromise('fullRegister', gqlFullRegister(login, password))
+const actionFullRegister = (login, password) => actionPromise ('fullRegister', gqlFullRegister(login, password))
 
 const actionFullLogin = (login, password) => async dispatch => {
     const token = await dispatch(actionPromise('login', gqlFullLogin(login, password)))
@@ -448,13 +448,13 @@ const actionCartSet = (good, count = 1) => ({ type: 'CART_SET', count, good })
 const actionCartClear = () => ({ type: 'CART_CLEAR' })
 
 const actionAuthLogin = token => ({ type: 'AUTH_LOGIN', token })
-const actionAuthLogout = () => ({ type: 'AUTH_LOGOUT' })
+const actionAuthLogout = () => ({type: 'AUTH_LOGOUT'})
 
 window.onhashchange = () => {
-    const [, route, _id] = location.hash.split('/')
+    const [,route, _id] = location.hash.split('/')
 
     const routes = {
-        people() {
+        people(){
             console.log('People', _id)
             store.dispatch(actionGetPeople(_id))
         },
@@ -462,20 +462,20 @@ window.onhashchange = () => {
             console.log("категория:", _id)
             store.dispatch(actionCategoryById(_id))
         },
-        good() {
+        good(){
             console.log('good', _id)
             store.dispatch(actionGoodById(_id))
         },
-        login() {
+        login(){
             console.log('А ТУТ ЩА ДОЛЖНА БЫТЬ ФОРМА ЛОГИНА')
             //нарисовать форму логина, которая по нажатию кнопки Login делает store.dispatch(actionFullLogin(login, password))
         },
         //register(){
-        ////нарисовать форму регистрации, которая по нажатию кнопки Login делает store.dispatch(actionFullRegister(login, password))
+            ////нарисовать форму регистрации, которая по нажатию кнопки Login делает store.dispatch(actionFullRegister(login, password))
         //},
     }
 
-    if (route in routes) {
+    if (route in routes){
         routes[route]()
     }
 }
